@@ -147,9 +147,10 @@ if __name__ == "__main__":
 
 
     #Si es vigente, se agrega el final del mes
-
+    vigente = False
     if text[60] == "Vigente" or text[60] == "Vigente":
         input("Vigente")
+        vigente = True
         ultimo_dia_mes = str(calendar.monthrange(date.today().year,date.today().month)[1]) + "/" + str(date.today().month) + "/" + str(date.today().year)
         fechas_movimiento[0] = ultimo_dia_mes
         salarios_base[0] = salarios_base[1]
@@ -470,41 +471,36 @@ if __name__ == "__main__":
 
     #region Clipboard
     #Copiar fechas y salarios solo hasta donde fueron 1750 días
-    fechas_movimiento = str(fechas_movimiento[:lasti+1]).replace("[","")
-    fechas_movimiento = fechas_movimiento.replace("]","")
-    fechas_movimiento = fechas_movimiento.replace("'","")
-    fechas_movimiento = fechas_movimiento.replace(", ","\n")
-    pc.copy(fechas_movimiento)
-    input("FECHAS EN EL CLIPBOARD. (Presione enter para copiar salarios.)")
-    salarios_base = str(salarios_base[:lasti+1]).replace("[","")
-    salarios_base = salarios_base.replace("]","")
-    salarios_base = salarios_base.replace("'","")
-    salarios_base = salarios_base.replace(", ","\n")
-    pc.copy(salarios_base)
-    input("SALARIOS EN EL CLIPBOARD. (Presione enter para copiar diferenciadias.)")
-    
-
-
-    dias = str(dias).replace("[","")
-    dias = dias.replace("]","")
-    dias = dias.replace("'","")
-    dias = dias.replace(", ","\n")
-    pc.copy(dias)
-    input("DIFERENCIA DE DIAS EN CLIPBOARD. (Presione enter para copiar semanas.)")
-
-    semanas = str(semanas).replace("[","")
-    semanas = semanas.replace("]","")
-    semanas = semanas.replace("'","")
-    semanas = semanas.replace(", ","\n")
-    pc.copy(semanas)
-    input("CANTIDAD DE SEMANAS EN EL CLIPBOARD")
-    
-    ponderacion = str(ponderacion).replace("[","")
-    ponderacion = ponderacion.replace("]","")
-    ponderacion = ponderacion.replace("'","")
-    ponderacion = ponderacion.replace(", ","\n")
-    pc.copy(ponderacion)
-    input("PONDERACION EN EL CLIPBOARD")
+    # fechas_movimiento = str(fechas_movimiento[:lasti+1]).replace("[","")
+    # fechas_movimiento = fechas_movimiento.replace("]","")
+    # fechas_movimiento = fechas_movimiento.replace("'","")
+    # fechas_movimiento = fechas_movimiento.replace(", ","\n")
+    # pc.copy(fechas_movimiento)
+    # input("FECHAS EN EL CLIPBOARD. (Presione enter para copiar salarios.)")
+    # salarios_base = str(salarios_base[:lasti+1]).replace("[","")
+    # salarios_base = salarios_base.replace("]","")
+    # salarios_base = salarios_base.replace("'","")
+    # salarios_base = salarios_base.replace(", ","\n")
+    # pc.copy(salarios_base)
+    # input("SALARIOS EN EL CLIPBOARD. (Presione enter para copiar diferenciadias.)")
+    # dias = str(dias).replace("[","")
+    # dias = dias.replace("]","")
+    # dias = dias.replace("'","")
+    # dias = dias.replace(", ","\n")
+    # pc.copy(dias)
+    # input("DIFERENCIA DE DIAS EN CLIPBOARD. (Presione enter para copiar semanas.)")
+    # semanas = str(semanas).replace("[","")
+    # semanas = semanas.replace("]","")
+    # semanas = semanas.replace("'","")
+    # semanas = semanas.replace(", ","\n")
+    # pc.copy(semanas)
+    # input("CANTIDAD DE SEMANAS EN EL CLIPBOARD")
+    # ponderacion = str(ponderacion).replace("[","")
+    # ponderacion = ponderacion.replace("]","")
+    # ponderacion = ponderacion.replace("'","")
+    # ponderacion = ponderacion.replace(", ","\n")
+    # pc.copy(ponderacion)
+    # input("PONDERACION EN EL CLIPBOARD")
     #endregion Clipboard
 
     if input("Modo exacto. Usar semanas exactas, sino usar 250. (y/n)") == "y":
@@ -568,7 +564,7 @@ if __name__ == "__main__":
     tabla[16] = (tabla[13] + tabla[14] + tabla[15])
     
     #Dando formato final de números
-    tabla[8] = tabla[8]*100
+    tabla[8] = round(tabla[8]*100,2)
     tabla[9] = tabla[9]*100   
     tabla[10] = "${:,}".format(math.trunc(round(tabla[10],0)))
     tabla[11] = "${:,}".format(math.trunc(round(tabla[11],0)))
@@ -661,7 +657,71 @@ if __name__ == "__main__":
     tabla_word.rows[0].cells[0].text = "SEMANAS COTIZADAS"
     tabla_word.rows[0].cells[1].text = ""
     tabla_word.rows[0].cells[2].text = "CODIGO VIGENTE"
-    tabla_word.rows[0].cells[3].text = "VVB8"
+
+# CALCULO!C8<=800,"2",SI(CALCULO!C8<1200,"3",SI(CALCULO!C8<1600,"4",SI(CALCULO!C8>1600,"5"))))
+    semanas_cotizadas = int(semanas_cotizadas)
+    if vigente:
+        if semanas_cotizadas <= 800:
+            color = parse_xml(r'<w:shd {} w:fill="FF0000"/>'.format(nsdecls('w')))
+            codigo="VVD6"
+        elif semanas_cotizadas < 1200:
+            color = parse_xml(r'<w:shd {} w:fill="FF9900"/>'.format(nsdecls('w')))
+            codigo = "VVC7"
+        elif semanas_cotizadas < 1600:
+            color = parse_xml(r'<w:shd {} w:fill="FFFF00"/>'.format(nsdecls('w')))
+            codigo = "VVB8"
+        elif semanas_cotizadas >= 1600:
+            color = parse_xml(r'<w:shd {} w:fill="00FF00"/>'.format(nsdecls('w')))
+            codigo = "VVA10"
+    else: 
+        anio = diferencia_fechas(text[60],date.today().strftime('%d/%m/%Y')) 
+        anio = int(round(anio/365,0))
+        if anio < 1: anio = 1 #Si apenas está por cumplir el año
+        print(anio)
+        codigo = "RR"
+        if semanas_cotizadas <= 800:
+            codigo = codigo + "D"
+        elif semanas_cotizadas < 1200:
+            codigo = codigo + "C"
+        elif semanas_cotizadas < 1600:
+            codigo = codigo + "B"
+        elif semanas_cotizadas >= 1600:
+            codigo = codigo + "A"
+
+        if anio == 1: codigo = codigo + "6"
+        if anio == 2: codigo = codigo + "7"
+        if anio == 3: codigo = codigo + "8"
+        if anio == 4: codigo = codigo + "9"
+        if anio == 5: codigo = codigo + "10"
+        input(codigo)
+        verde_fuerte = ['RRA6', 'RRA7', 'RRA8', 'RRA9', 'RRA100', 'RRB9', 'RRB10', 'RRC10']
+        verde_claro = ['RRB7', 'RRB8', 'RRC8', 'RRC9']
+        amarillo = ['RRB6', 'RRC7']
+        naranja = ['RRD10','RRC6']
+        rojo = ['RRD6','RRD7','RRD8','RRD9']
+        if codigo in rojo:
+            color = parse_xml(r'<w:shd {} w:fill="FF0000"/>'.format(nsdecls('w')))
+        if codigo in naranja:
+            color = parse_xml(r'<w:shd {} w:fill="FF9900"/>'.format(nsdecls('w')))
+        if codigo in amarillo:
+            color = parse_xml(r'<w:shd {} w:fill="FFFF00"/>'.format(nsdecls('w')))
+        if codigo in verde_claro:
+            color = parse_xml(r'<w:shd {} w:fill="00FF00"/>'.format(nsdecls('w')))
+        if codigo in verde_fuerte:
+            color = parse_xml(r'<w:shd {} w:fill="00B050"/>'.format(nsdecls('w')))
+    if anio < 6:
+        tabla_word.rows[0].cells[3]._tc.get_or_add_tcPr().append(color)
+        tabla_word.rows[0].cells[3].text = codigo
+    else:
+        tabla_word.rows[0].cells[3].text = "No aplica"
+
+
+
+
+
+
+
+
 
     for i in range(17): tabla_word.add_row().cells
     
