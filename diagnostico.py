@@ -16,7 +16,7 @@ from docx.oxml.ns import qn  # Para caption (referencias de tabla)
 from docx.enum.text import WD_COLOR_INDEX  # Subrayar
 from docx.shared import RGBColor  # Color letra
 from docx.shared import Pt #Tamaño de letra
-
+#
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
