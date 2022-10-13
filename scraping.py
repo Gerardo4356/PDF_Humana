@@ -27,7 +27,7 @@ import os.path
 import pickle
 import matplotlib.pyplot as plt
 from keras.models import load_model #requiere instalar CUDA (de nvidia) y además pip install tf-nightly-gpu (para que tensorflow reconozca CUDA 11)  Al parecer esta versión solo jala con CUDA 11.0
-from sklearn.preprocessing import LabelBinarizer
+from sklearn.preprocessing import LabelBinarizer #pip install sklearn
 import argparse
 
 
@@ -197,6 +197,15 @@ def webscraping(nss,curp,correo, headless = True):
             pass
         campo = driver.find_element(By.XPATH, '//*[@id="btnContinuar"]')
         campo.click()
+
+
+        try:
+            driver.find_element(By.XPATH, '//*[@id="mensajesError"]/div/p/text()')
+        except:
+            input("Error en datos")
+            driver.quit()
+
+        input("PAUSA")
         #endregion captcha
        
         #Mensaje de error 
