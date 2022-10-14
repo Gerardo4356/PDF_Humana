@@ -330,7 +330,10 @@ def webscraping(nss,curp,correo, headless = True):
                 driver.find_element(By.XPATH, '//*[@id="formTurnar"]/div[2]/div/div[1]/h4/button').click()  #Click en constancia otra vez
             
             except:
-                input("ERROR RARO AL ENVIAR EL SEGUNDO CAPTCHA, PUEDE SER DEL SITIO")
+                print("ERROR RARO AL ENVIAR EL SEGUNDO CAPTCHA, PUEDE SER DEL SITIO")
+                respuesta = "SISEC ANORMAL"
+                driver.quit()
+                return respuesta
 
     
     
