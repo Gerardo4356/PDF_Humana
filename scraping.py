@@ -325,6 +325,7 @@ def webscraping(nss,curp,correo, headless = True):
     #Si ya está presente el elemento
     print("Se realizó correctamente")
     driver.quit()
+    return "Se realizó correctamente"
     
     
     
