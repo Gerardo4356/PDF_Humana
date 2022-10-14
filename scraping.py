@@ -140,7 +140,7 @@ def captcha(input=r"unsolved_captcha\temp.jpg"):
 
 def webscraping(nss,curp,correo, headless = True):
     
-    
+    respuesta = "SISEC OK"
     
     
     service = ChromeService(executable_path=ChromeDriverManager().install())
@@ -209,9 +209,21 @@ def webscraping(nss,curp,correo, headless = True):
                 print("CURP: " + curp)
                 print("Cerrando proceso")
                 driver.quit()
+                respuesta = "El NSS capturado no coincide con la CURP."
         except:
             pass
-
+        #Error en curp
+        try:
+            x = driver.find_element(By.XPATH, '//*[@id="mensajesError"]/div/p').text
+            print(x)
+            if x == "¡Error! CURP incorrecto. Por favor verifique.":
+                print("NSS: " + nss)
+                print("CURP: " + curp)
+                print("Cerrando proceso")
+                driver.quit()
+                respuesta = "¡Error! CURP incorrecto. Por favor verifique."
+        except:
+            pass
 
 
 
@@ -325,7 +337,7 @@ def webscraping(nss,curp,correo, headless = True):
     #Si ya está presente el elemento
     print("Se realizó correctamente")
     driver.quit()
-    return "Se realizó correctamente"
+    return respuesta
     
     
     
