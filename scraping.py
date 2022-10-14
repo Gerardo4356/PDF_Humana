@@ -221,7 +221,7 @@ def webscraping(nss,curp,correo, headless = True):
                 print("CURP: " + curp)
                 print("Cerrando proceso")
                 driver.quit()
-                respuesta = "¡Error! CURP incorrecto. Por favor verifique."
+                respuesta = x
         except:
             pass
 
