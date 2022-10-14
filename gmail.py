@@ -101,16 +101,20 @@ def solicitar_constancias(access, driver):
         for i in id_messages:
             service.users().messages().modify(userId="me", id=i,body={"removeLabelIds": ['UNREAD']}).execute()
 
-if __name__ == '__main__':
-    os.system('cls')
-    print("Cargando SCRAPING Y DRIVER...")
-    #region Librerías
-    import scraping
+def wdriver():
     chrome_service = ChromeService(executable_path=ChromeDriverManager().install())
     options = webdriver.ChromeOptions()
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     options.add_argument('headless')
     driver = webdriver.Chrome(service=chrome_service, options=options)
+    return driver
+
+if __name__ == '__main__':
+    os.system('cls')
+    print("Cargando SCRAPING Y DRIVER...")
+    #region Librerías
+    import scraping
+    driver = wdriver()
     #endregion
     while True:
 

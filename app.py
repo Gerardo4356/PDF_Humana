@@ -2,7 +2,8 @@ from filecmp import DEFAULT_IGNORES
 from re import I
 from flask import Flask, render_template, request, redirect, url_for, flash, send_file
 import scraping
-
+import gmail
+import time
 app = Flask(__name__)
 verificaciones  = []
 
@@ -29,12 +30,22 @@ def contact():
             print(nss)
             try:
                 res = scraping.webscraping(nss,curp,correo,True)
+                verificaciones.append(res)
+                try:
+                    verificaciones.append("Esperando correo...")
+                    time.sleep(5)
+                    gmail.solicitar_constancias(gmail.access(),gmail.wdriver())
+                    verificaciones.append("Gmail OK")
+                except Exception as e:
+                    verificaciones.append("Error en gmail")
+                    print(e)
             except:
                 res = "Error con SISEC"
+                verificaciones.append(res)
+
             datos.append(correo)
             datos.append(curp)
             datos.append(nss)
-            verificaciones.append(res)
             print("Verificar")
 
         if request.form.get('Procesar'):
