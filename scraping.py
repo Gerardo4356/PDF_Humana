@@ -199,13 +199,26 @@ def webscraping(nss,curp,correo, headless = True):
         campo.click()
 
 
-        try:
-            driver.find_element(By.XPATH, '//*[@id="mensajesError"]/div/p/text()')
-        except:
-            input("Error en datos")
-            driver.quit()
 
-        input("PAUSA")
+        #Detectar error con captcha
+        try:
+            x = driver.find_element(By.XPATH, '//*[@id="divErrorCampos"]/p').text
+            print(x)
+            if x == "El NSS capturado no coincide con la CURP.":
+                print("NSS: " + nss)
+                print("CURP: " + curp)
+                print("Cerrando proceso")
+                driver.quit()
+        except:
+            pass
+
+
+
+
+
+
+
+
         #endregion captcha
        
         #Mensaje de error 
@@ -217,6 +230,21 @@ def webscraping(nss,curp,correo, headless = True):
         except:
             #Hay un error, repite
             captcha_error = True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     os.system('cls')
     
@@ -304,11 +332,13 @@ def webscraping(nss,curp,correo, headless = True):
     
 if __name__ == "__main__":
     
-    nss = "3280626287"
-    curp = "AIRL621115HCLRDP07"
+
+
+
+    nss = "43796036085"
+    curp = "LOVR600910HNLPLB02"
     correo = "gerardocamarillodl@gmail.com"
    
     webscraping(nss,curp,correo, headless =False)
     print("Listo")
 
-    #test
