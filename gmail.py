@@ -107,6 +107,7 @@ def descargar_adjunto(access,driver):
     
     if len(messages) > 1:    
         id_messages = []
+        input(message)
         for message in messages['messages']:
             print(message['id'])
             id_messages.append(message['id']) 
@@ -117,9 +118,9 @@ def descargar_adjunto(access,driver):
             attachment = service.users().messages().attachments().get(userId='me',messageId=id_messages[i],id=attachmentId).execute()['data']
             # attachment = "b'" + str(attachment) + "'"
             file = urlsafe_b64decode(attachment)
-
-        with open(r"PDF/test.pdf", "wb") as fh:
-            fh.write(file)
+            #Falta extraer NSS y Nombre
+            with open(r"PDF/test"+i+".pdf", "wb") as fh:
+                fh.write(file)
 
 
 def wdriver(headless=True):
