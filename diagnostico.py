@@ -53,12 +53,8 @@ def copiar(array):
     pc.copy(x)
     
 
-if __name__ == "__main__":
-
-    import os
-    os.system("taskkill /IM WINWORD.exe")
-    os.system('cls')
-
+def diagnostico():
+    from datetime import date
 
     #Elegir pdf
     files = os.listdir(os.getcwd()+"/PDF")
@@ -73,13 +69,18 @@ if __name__ == "__main__":
         print(str(i)+"\t"+pdf)
     
     #reciclando variable files para escoger uno de los files
+    """
     files = int(input("Archivo a leer: "))
     while not (files>=0 and files<=len(pdfs)-1):
       files = int(input("Archivo a leer: "))
     input("Archivo elegido: "+pdfs[files])
     print("------------------")
-
-
+    """
+    os.system("cls")
+    files = 0
+    
+    
+    
     # Leyendo el PDF,l
     text = extract_text("PDF/"+pdfs[files]).split("\n")
     # for i, j in enumerate(text):
@@ -91,7 +92,7 @@ if __name__ == "__main__":
     semanas_reconocidas = text[34]
     semanas_desconocidas = text[36]
     semanas_reintegradas = text[38]
-
+    
     # Obteniendo datos
     NOMBRE = text[6]
     NSS = text[10]
@@ -502,13 +503,14 @@ if __name__ == "__main__":
     # pc.copy(ponderacion)
     # input("PONDERACION EN EL CLIPBOARD")
     #endregion Clipboard
-
+    """
     if input("Modo exacto. Usar semanas exactas, sino usar 250. (y/n)") == "y":
         salario_prom = round(sum_ponderacion/sum_semanas,2)
     else:
         salario_prom = round(sum_ponderacion/250,2)
     input("salario_prom: " + str(salario_prom))
-        
+    """    
+    salario_prom = round(sum_ponderacion/sum_semanas,2)
     #region Tabla
     
     tablaVSMi = [0, 1.01, 1.26, 1.51, 1.76, 2.01, 2.26, 2.51, 2.76, 3.01, 3.26, 3.51, 3.76, 4.01, 4.26, 4.51, 4.76, 5.01, 5.26, 5.51, 5.76, 6.01]
@@ -530,7 +532,7 @@ if __name__ == "__main__":
     tabla[3] = 1#input("CÓNYUGE (1 o 0): ")
     tabla[4] = 0#input("HIJOS (MENORES O ESTUDIANDO): ")
     tabla[5] = 0#input("PADRES (SOLO FALTA DE ESPOSA E HIJOS): ")
-    input("EL SALARIO MINIMO DF ESTÁ ESTABLECIDO EN 96.22")
+    # input("EL SALARIO MINIMO DF ESTÁ ESTABLECIDO EN 96.22")
     tabla[6] = 96.22
     tabla[7] = float(tabla[1])/float(tabla[6])
     tabla[7] = round(tabla[7],2)
@@ -660,6 +662,10 @@ if __name__ == "__main__":
 
 # CALCULO!C8<=800,"2",SI(CALCULO!C8<1200,"3",SI(CALCULO!C8<1600,"4",SI(CALCULO!C8>1600,"5"))))
     semanas_cotizadas = int(semanas_cotizadas)
+
+    input(vigente)
+    input(semanas_cotizadas)
+
     if vigente:
         if semanas_cotizadas <= 800:
             color = parse_xml(r'<w:shd {} w:fill="FF0000"/>'.format(nsdecls('w')))
@@ -673,9 +679,12 @@ if __name__ == "__main__":
         elif semanas_cotizadas >= 1600:
             color = parse_xml(r'<w:shd {} w:fill="00FF00"/>'.format(nsdecls('w')))
             codigo = "VVA10"
+        tabla_word.rows[0].cells[3]._tc.get_or_add_tcPr().append(color)
+        tabla_word.rows[0].cells[3].text = codigo
     else: 
         anio = diferencia_fechas(text[60],date.today().strftime('%d/%m/%Y')) 
         anio = int(round(anio/365,0))
+
         if anio < 1: anio = 1 #Si apenas está por cumplir el año
         print(anio)
         codigo = "RR"
@@ -693,7 +702,7 @@ if __name__ == "__main__":
         if anio == 3: codigo = codigo + "8"
         if anio == 4: codigo = codigo + "9"
         if anio == 5: codigo = codigo + "10"
-        input(codigo)
+        # input(codigo)
         verde_fuerte = ['RRA6', 'RRA7', 'RRA8', 'RRA9', 'RRA100', 'RRB9', 'RRB10', 'RRC10']
         verde_claro = ['RRB7', 'RRB8', 'RRC8', 'RRC9']
         amarillo = ['RRB6', 'RRC7']
@@ -709,11 +718,12 @@ if __name__ == "__main__":
             color = parse_xml(r'<w:shd {} w:fill="00FF00"/>'.format(nsdecls('w')))
         if codigo in verde_fuerte:
             color = parse_xml(r'<w:shd {} w:fill="00B050"/>'.format(nsdecls('w')))
-    if anio < 6:
-        tabla_word.rows[0].cells[3]._tc.get_or_add_tcPr().append(color)
-        tabla_word.rows[0].cells[3].text = codigo
-    else:
-        tabla_word.rows[0].cells[3].text = "No aplica"
+
+        if anio < 6:
+            tabla_word.rows[0].cells[3]._tc.get_or_add_tcPr().append(color)
+            tabla_word.rows[0].cells[3].text = codigo
+        else:
+            tabla_word.rows[0].cells[3].text = "No aplica"
 
 
 
@@ -788,3 +798,10 @@ if __name__ == "__main__":
     document.save('demo.docx')
     #endregion
     os.system("start demo.docx")
+
+if __name__ == "__main__":
+    import os
+    os.system("taskkill /IM WINWORD.exe")
+    os.system('cls')
+
+    diagnostico()
