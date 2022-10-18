@@ -3,6 +3,7 @@ from re import I
 from flask import Flask, render_template, request, redirect, url_for, flash, send_file
 import scraping
 import gmail
+import diagnostico
 import time
 app = Flask(__name__)
 verificaciones  = []
@@ -29,17 +30,25 @@ def contact():
             print(curp)
             print(nss)
             try:
-                res = scraping.webscraping(nss,curp,correo,True)
+                res = scraping.webscraping(nss,curp,correo,headless=True)
                 verificaciones.append(res)
+
+                print("Proceso GMAIL..")
                 try:
-                    verificaciones.append("Esperando correo...")
                     time.sleep(5)
-                    gmail.solicitar_constancias(gmail.access(),gmail.wdriver())
+                    gmail.solicitar_constancias(gmail.access,gmail.wdriver())
                     verificaciones.append("Gmail OK")
+                    print("Esperando a que lleguen los correos 5s")
+                    time.sleep(5)
+                    gmail.descargar_adjunto(gmail.access,gmail.wdriver())
+                    verificaciones.append("PDF READY OK")
+
                 except Exception as e:
-                    verificaciones.append("Error en gmail")
+                    verificaciones.append("Error en gmail")             
                     print(e)
-            except:
+
+            except Exception as e:
+                print(e)
                 res = "Error con SISEC"
                 verificaciones.append(res)
 
@@ -52,9 +61,9 @@ def contact():
             verificaciones = []
             datos = []
             print("Procesar")
-
+            diagnostico.diagnostico()
             #something diferent
-            pass
+            
     return render_template('home.html', verificaciones=verificaciones, datos=datos)
 
     
