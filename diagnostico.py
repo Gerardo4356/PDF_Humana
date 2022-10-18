@@ -150,7 +150,8 @@ def diagnostico():
     #Si es vigente, se agrega el final del mes
     vigente = False
     if text[60] == "Vigente" or text[60] == "Vigente":
-        input("Vigente")
+        # input("Vigente")
+        print("Vigente")
         vigente = True
         ultimo_dia_mes = str(calendar.monthrange(date.today().year,date.today().month)[1]) + "/" + str(date.today().month) + "/" + str(date.today().year)
         fechas_movimiento[0] = ultimo_dia_mes
@@ -172,7 +173,8 @@ def diagnostico():
                 diff = diferencia_fechas(fecha,fechas_movimiento[i-1])
                 if diff < 1: 
                     dias.append("") 
-                    input("Patrón sin valor")
+                    # input("Patrón sin valor")
+                    print("Patrón sin valor")
                 else: #Si hay diferencia positiva de días, se agregan a los arrays
                     # print(fechas_movimiento[i-1])
                     # print(fecha)
@@ -663,8 +665,10 @@ def diagnostico():
 # CALCULO!C8<=800,"2",SI(CALCULO!C8<1200,"3",SI(CALCULO!C8<1600,"4",SI(CALCULO!C8>1600,"5"))))
     semanas_cotizadas = int(semanas_cotizadas)
 
-    input(vigente)
-    input(semanas_cotizadas)
+    # input(vigente)
+    # input(semanas_cotizadas)
+    print(vigente)
+    print(semanas_cotizadas)
 
     if vigente:
         if semanas_cotizadas <= 800:
