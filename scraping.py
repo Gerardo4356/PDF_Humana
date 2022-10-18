@@ -274,17 +274,10 @@ def webscraping(nss,curp,correo, headless = True):
             detalle_seleccionado = campo.is_selected()
         except Exception as e: 
             print(e)
-            input("No se localizo detalle")
-
-        #Verificar que se seleccionó la opción
-    
-    ##################################
-    ##################################
-    ##################################
-    ##################################
-    ##################################
-    ##################################
-    ##################################
+            print("No se localizo detalle")
+            respuesta = "SISEC TIENE UN ERROR EN SU SITIO WEB"
+            driver.quit()
+            detalle_seleccionado = True #Seleccionar para que salga del bucle
 
 
 
@@ -294,6 +287,8 @@ def webscraping(nss,curp,correo, headless = True):
 
 
 
+    input("Pausa")
+    # Segundo captcha
     captcha_error = True
     while captcha_error == True:
     #region captcha
@@ -324,17 +319,13 @@ def webscraping(nss,curp,correo, headless = True):
         except Exception as e:
             input("Error en encontrar el campo del segundo captcha")
             pass
-        
-        
-
-        
-        
-        
+                
         
         campo = driver.find_element(By.XPATH, '//*[@id="btnContinuar"]')
         campo.click()
         #endregion captcha
         
+        #Si hay error hacer ...
         print("Esperando elemento")
         try:
             captcha_error = False
@@ -352,6 +343,22 @@ def webscraping(nss,curp,correo, headless = True):
                 driver.find_element(By.XPATH, '//*[@id="divErrorCampos"]/p/b')                              #Campo de error
                 driver.find_element(By.XPATH, '//*[@id="btnCerrar"]').click()                               #Click en reintentar
                 driver.find_element(By.XPATH, '//*[@id="formTurnar"]/div[2]/div/div[1]/h4/button').click()  #Click en constancia otra vez
+
+                #Solicitar el PDF detallado
+                detalle_seleccionado = False
+                while not detalle_seleccionado:
+                    try:
+                        print("Solicitando detalle de constancia")
+                        campo = driver.find_element(By.XPATH, '//*[@id="detalle"]') #Click en pdf detallado
+                        driver.execute_script("arguments[0].click();", campo)
+                        detalle_seleccionado = campo.is_selected()
+                    except Exception as e: 
+                        print(e)
+                        print("No se localizo detalle")
+                        respuesta = "SISEC TIENE UN ERROR EN SU SITIO WEB"
+                        driver.quit()
+                        detalle_seleccionado = True #Seleccionar para que salga del bucle
+
             
             except:
                 print("ERROR RARO AL ENVIAR EL SEGUNDO CAPTCHA, PUEDE SER DEL SITIO")
