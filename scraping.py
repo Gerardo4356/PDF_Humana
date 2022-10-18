@@ -264,8 +264,10 @@ def webscraping(nss,curp,correo, headless = True):
     campo = driver.find_element(By.XPATH, '//*[@id="formTurnar"]/div[2]/div/div[1]/h4/button')
     campo.click()
        
+
     #Solicitar el PDF detallado
     detalle_seleccionado = False
+    intento = 0
     while not detalle_seleccionado:
         try:
             print("Solicitando detalle de constancia")
@@ -273,11 +275,15 @@ def webscraping(nss,curp,correo, headless = True):
             driver.execute_script("arguments[0].click();", campo)
             detalle_seleccionado = campo.is_selected()
         except Exception as e: 
-            print(e)
-            print("No se localizo detalle")
-            respuesta = "SISEC TIENE UN ERROR EN SU SITIO WEB"
-            driver.quit()
-            detalle_seleccionado = True #Seleccionar para que salga del bucle
+            if intento < 5:
+                print(e)
+                print("No se localizo detalle")
+            else:
+                respuesta = "SISEC TIENE UN ERROR EN SU SITIO WEB"
+                print("SISEC TIENE UN ERROR EN SU SITIO")
+                driver.quit()
+                detalle_seleccionado = True #Seleccionar para que salga del bucle
+            intento = intento + 1
 
 
 
@@ -285,9 +291,6 @@ def webscraping(nss,curp,correo, headless = True):
 
 
 
-
-
-    input("Pausa")
     # Segundo captcha
     captcha_error = True
     while captcha_error == True:
@@ -346,6 +349,7 @@ def webscraping(nss,curp,correo, headless = True):
 
                 #Solicitar el PDF detallado
                 detalle_seleccionado = False
+                intento = 0
                 while not detalle_seleccionado:
                     try:
                         print("Solicitando detalle de constancia")
@@ -353,11 +357,15 @@ def webscraping(nss,curp,correo, headless = True):
                         driver.execute_script("arguments[0].click();", campo)
                         detalle_seleccionado = campo.is_selected()
                     except Exception as e: 
-                        print(e)
-                        print("No se localizo detalle")
-                        respuesta = "SISEC TIENE UN ERROR EN SU SITIO WEB"
-                        driver.quit()
-                        detalle_seleccionado = True #Seleccionar para que salga del bucle
+                        if intento < 5:
+                            print(e)
+                            print("No se localizo detalle")
+                        else:
+                            respuesta = "SISEC TIENE UN ERROR EN SU SITIO WEB"
+                            print("SISEC TIENE UN ERROR EN SU SITIO")
+                            driver.quit()
+                            detalle_seleccionado = True #Seleccionar para que salga del bucle
+                        intento = intento + 1
 
             
             except:
