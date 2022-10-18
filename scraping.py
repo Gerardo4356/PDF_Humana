@@ -264,12 +264,36 @@ def webscraping(nss,curp,correo, headless = True):
     campo = driver.find_element(By.XPATH, '//*[@id="formTurnar"]/div[2]/div/div[1]/h4/button')
     campo.click()
        
+    #Solicitar el PDF detallado
+    detalle_seleccionado = False
+    while not detalle_seleccionado:
+        try:
+            print("Solicitando detalle de constancia")
+            campo = driver.find_element(By.XPATH, '//*[@id="detalle"]') #Click en pdf detallado
+            driver.execute_script("arguments[0].click();", campo)
+            detalle_seleccionado = campo.is_selected()
+        except Exception as e: 
+            print(e)
+            input("No se localizo detalle")
 
-   
-    try:
-        campo = driver.find_element(By.XPATH, '//*[@id="detalle"]')
-        driver.execute_script("arguments[0].click();", campo)
-    except Exception as e: input(e)
+        #Verificar que se seleccionó la opción
+    
+    ##################################
+    ##################################
+    ##################################
+    ##################################
+    ##################################
+    ##################################
+    ##################################
+
+
+
+
+
+
+
+
+
     captcha_error = True
     while captcha_error == True:
     #region captcha
@@ -348,11 +372,8 @@ def webscraping(nss,curp,correo, headless = True):
     
 if __name__ == "__main__":
     
-
-
-
-    nss = "43796036085"
-    curp = "LOVR600910HNLPLB02"
+    nss = "43766025480"
+    curp = "TOOF600118HNLRRR04"
     correo = "gerardocamarillodl@gmail.com"
    
     webscraping(nss,curp,correo, headless =False)
