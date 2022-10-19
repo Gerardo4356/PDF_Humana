@@ -102,6 +102,7 @@ def solicitar_constancias(access, driver):
             service.users().messages().modify(userId="me", id=i,body={"removeLabelIds": ['UNREAD']}).execute()
 
 def descargar_adjunto(access,driver):
+    respuesta = "Archivo PDF no ha llegado a GMAIl"
     service = access(False)
     messages = service.users().messages().list(userId='me',q="from:(historia.laboral@imss.gob.mx) has:attachment is:unread ").execute()
     
@@ -121,10 +122,11 @@ def descargar_adjunto(access,driver):
             with open(r"PDF/test"+str(i)+".pdf", "wb") as fh:
                 fh.write(file)
             print(r"Listo DOCUMENTO:  PDF/test"+str(i)+".pdf")
+            respuesta = "Archivo descargado"
         #Marcas correos como leídos
         for i in id_messages:
             service.users().messages().modify(userId="me", id=i,body={"removeLabelIds": ['UNREAD']}).execute()
-
+    return respuesta
 
 def wdriver(headless=True):
     chrome_service = ChromeService(executable_path=ChromeDriverManager().install())
