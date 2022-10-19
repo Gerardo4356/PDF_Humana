@@ -22,6 +22,15 @@
 
                 </div>
 
+                <center><input type="submit" name="Descargar" value="Descargar" class="btn btn-primary mt-5 mx-auto">
+                </center>
+
+                {% for verificacion in verificaciones_descarga %}
+                <div class="alert alert-dismissible alert-light">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <strong>{{ verificacion }}</strong>
+                </div>
+                {% endfor %}
 
             </div>
             <div class="col-sm">
