@@ -3,4 +3,5 @@ model/
 PDF/
 unsolved_captcha/temp.jpg
 __pycache__/
-demo.docx/
+demo.docx
+token.json

@@ -65,8 +65,18 @@ def contact():
             print("Procesar")
             diagnostico.diagnostico()
             #something diferent
-            
-    return render_template('home.html', verificaciones=verificaciones, datos=datos, verificaciones_descarga=verificaciones_descarga)
+        if request.form.get("Procesar_Manual"):
+            uploaded_file = request.files['ruta_pdf']
+            if uploaded_file.filename != '':
+                uploaded_file.save(r"PDF/test0.pdf")
+                diagnostico.diagnostico()
+
+
+
+
+
+
+    return render_template('home.html', verificaciones=verificaciones, datos=datos, verificaciones_descarga=verificaciones_descarga, check = 'checked="false"')
 
     
 if __name__ == "__main__":     # debug sirve en fase de pruebas para no tener que reiniciar a cada rato
