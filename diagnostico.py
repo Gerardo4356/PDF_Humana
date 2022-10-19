@@ -16,6 +16,8 @@ from docx.oxml.ns import qn  # Para caption (referencias de tabla)
 from docx.enum.text import WD_COLOR_INDEX  # Subrayar
 from docx.shared import RGBColor  # Color letra
 from docx.shared import Pt #Tamaño de letra
+from docx.shared import Cm, Inches # Ancho de columnas de tabla
+
 #
 from datetime import date
 from datetime import datetime
@@ -527,7 +529,7 @@ def diagnostico():
 
     
     
-    tabla = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
+    tabla = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
     tabla[0] = semanas_cotizadas
     tabla[1] = salario_prom
     tabla[2] = ""
@@ -566,10 +568,38 @@ def diagnostico():
     tabla[14] = esposa + hijos + padres #total de asignaciones
     tabla[15] = (tabla[13] + tabla[14]) * 0.11
     tabla[16] = (tabla[13] + tabla[14] + tabla[15])
+
+    #Dependiendo de la edad se agrega la última fila
+    if EDAD >= 65: 
+        tabla[17] = tabla[16] * 1
+        porcentaje = 1*100
+    if EDAD <= 64: 
+        tabla[17] = tabla[16] * 0.95
+        porcentaje = 0.95*100
+    if EDAD <= 63: 
+        tabla[17] = tabla[16] * 0.9
+        porcentaje = 0.9*100
+    if EDAD <= 62: 
+        tabla[17] = tabla[16] * 0.85
+        porcentaje = 0.85*100
+    if EDAD <= 61: 
+        tabla[17] = tabla[16] * 0.8
+        porcentaje = 0.8*100
+    if EDAD <= 60: 
+        tabla[17] = tabla[16] * 0.75
+        porcentaje = 0.75*100
+    # 60 AÑOS	$3,949	75%
+    # 61 AÑOS	$4,212	80%
+    # 62 AÑOS	$4,475	85%
+    # 63 AÑOS	$4,739	90%
+    # 64 AÑOS	$5,002	95%
+    # 65 AÑOS	$5,265	100%
+
+
     
     #Dando formato final de números
     tabla[8] = round(tabla[8]*100,2)
-    tabla[9] = tabla[9]*100   
+    tabla[9] = round(tabla[9]*100,2)   
     tabla[10] = "${:,}".format(math.trunc(round(tabla[10],0)))
     tabla[11] = "${:,}".format(math.trunc(round(tabla[11],0)))
     tabla[12] = "${:,}".format(math.trunc(round(tabla[12],0)))
@@ -577,6 +607,7 @@ def diagnostico():
     tabla[14] = "${:,}".format(math.trunc(round(tabla[14],0)))
     tabla[15] = "${:,}".format(math.trunc(round(tabla[15],0)))
     tabla[16] = "${:,}".format(math.trunc(round(tabla[16],0)))
+    tabla[17] = round(tabla[17],0)
     
     # tabla[0]          SEMANAS COTIZADAS
     # tabla[1]          SALARIO PROMEDIO
@@ -594,7 +625,7 @@ def diagnostico():
     # tabla[13]         MENSUAL
     # tabla[14]         TOTAL ASIGNACIONES
     # tabla[15]         INCREMENTO PRESIDENCIAL    
-    # tabla[15]         ****    INCREMENTO PRESIDENCIAL + TOTAL ASIGNACIONES + MENSUAL   ****    
+    # tabla[16]         ****    INCREMENTO PRESIDENCIAL + TOTAL ASIGNACIONES + MENSUAL   ****    
     
 
     
@@ -757,12 +788,14 @@ def diagnostico():
     filas.append("TOTAL ASIGNACIONES")
     filas.append("INCREMENTO PRESIDENCIAL")
     filas.append("")
-    filas.append("60 AÑOS")
+    filas.append(str(EDAD)+" AÑOS")
     
-
+    # Llenando contenido
     for i, fila in enumerate(filas):
         tabla_word.rows[i].cells[0].text = fila
         if i<len(tabla): tabla_word.rows[i].cells[1].text = str(tabla[i])
+    tabla_word.rows[16].cells[2].text = "100%"
+    tabla_word.rows[17].cells[2].text = str(round(porcentaje,0)) + "%"
     # tabla_word.style = "Table Grid"
     
     
@@ -774,11 +807,18 @@ def diagnostico():
                     font = run.font
                     font.size= Pt(9)
                     
-    
-    for i in range(4):
+    #Color a la ultima fila
+    for i in range(3):
         color = parse_xml(r'<w:shd {} w:fill="CC00FF"/>'.format(nsdecls('w')))
         tabla_word.rows[-1].cells[i]._tc.get_or_add_tcPr().append(color)
     
+    #Ancho a fila
+    tabla_word.autofit = False 
+    tabla_word.allow_autofit = False
+    widths = (Cm(7.34), Cm(6.17),Cm(4.87),Cm(2.58))
+    for row in tabla_word.rows:
+        for idx, width in enumerate(widths):
+            row.cells[idx].width = width
     
 
 
