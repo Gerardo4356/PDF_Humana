@@ -22,6 +22,7 @@ from docx.shared import Cm, Inches # Ancho de columnas de tabla
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 import calendar
 
 import os
@@ -570,6 +571,9 @@ def diagnostico():
     tabla[16] = (tabla[13] + tabla[14] + tabla[15])
 
     #Dependiendo de la edad se agrega la última fila
+    EDAD_exacta = relativedelta(datetime.now(), datetime(int(cumple_anio), int(cumple_mes), int(cumple_dia))) #Funcion alterna para sacar meses y dias
+    if EDAD_exacta.months >= 6: EDAD = EDAD_exacta.years + 1 #Si se quita esta linea, sigue funcionando pero sin redondear edad
+
     if EDAD >= 65: 
         tabla[17] = tabla[16] * 1
         porcentaje = 1*100
@@ -662,7 +666,7 @@ def diagnostico():
     p = document.add_paragraph('Nombre: '+NOMBRE)
     p = document.add_paragraph('NSS: '+NSS)
     p = document.add_paragraph('CURP: ' + CURP)
-    p = document.add_paragraph('EDAD: ' + str(EDAD) + ' años')
+    p = document.add_paragraph('EDAD: ' + str(EDAD_exacta.years) + ' años, '+str(EDAD_exacta.months)+' meses, '+str(EDAD_exacta.days)+' días.')
     p = document.add_paragraph('UMA 2022: $96,22')
     p = document.add_paragraph('SEMANAS COTIZADAS: '+str(semanas_cotizadas))
     p = document.add_paragraph('SALARIO PROMEDIO: '+str(salario_prom))
@@ -788,7 +792,8 @@ def diagnostico():
     filas.append("TOTAL ASIGNACIONES")
     filas.append("INCREMENTO PRESIDENCIAL")
     filas.append("")
-    filas.append(str(EDAD)+" AÑOS")
+    filas.append(str(EDAD)+" AÑOS.")
+
     
     # Llenando contenido
     for i, fila in enumerate(filas):
