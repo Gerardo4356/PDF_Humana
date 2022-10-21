@@ -17,6 +17,8 @@ from docx.enum.text import WD_COLOR_INDEX  # Subrayar
 from docx.shared import RGBColor  # Color letra
 from docx.shared import Pt #Tamaño de letra
 from docx.shared import Cm, Inches # Ancho de columnas de tabla
+from docx.enum.text import WD_COLOR_INDEX #Subrayar
+
 
 #
 from datetime import date
@@ -811,6 +813,7 @@ def diagnostico():
                 for run in paragraph.runs:
                     font = run.font
                     font.size= Pt(9)
+                    font.color.rgb = RGBColor(0, 0, 0)
                     
     #Color a la ultima fila
     for i in range(3):
@@ -824,6 +827,8 @@ def diagnostico():
     for row in tabla_word.rows:
         for idx, width in enumerate(widths):
             row.cells[idx].width = width
+
+
     
 
 
@@ -836,10 +841,11 @@ def diagnostico():
     p = document.add_paragraph('En la consulta se consideraron las semanas al día ' +date.today().strftime('%d/%m/%Y') + " y el salario promedio de la misma constancia. ")
     p.add_run("Representa la pensión que la persona recibiría. ")
     if EDAD < 60:
-        p.add_run("al cumplir 60 años. ").bold
+        p.add_run("al cumplir "+str(EDAD)+" años. ").bold
     else: p.add_run("")
 
-    p.add_run("En la constancia electrónica se reconocen "+ str(semanas_reconocidas) +" semanas. "+ str(semanas_desconocidas) +" semanas descontadas. Recibiría pensión mínima garantizada que en 2022 es de $"+str(pension_minima)+" pesos.")
+    p.add_run("En la constancia electrónica se reconocen "+ str(semanas_reconocidas) +" semanas. "+ str(semanas_desconocidas) +" semanas descontadas.")
+    p.add_run("Recibiría pensión mínima garantizada que en 2022 es de $"+str(pension_minima)+" pesos.").font.highlight_color = WD_COLOR_INDEX.YELLOW
     p.add_run("\nLe podemos hacer una propuesta para ayudarlo a obtener una pensión arriba de "+    "**"    +" mil pesos desde "+   "**"  +" de "+ "2022"  +". Hagamos una cita para ver si califica.")
     p.alignment=3
 
