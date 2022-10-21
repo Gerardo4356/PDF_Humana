@@ -423,21 +423,6 @@ def diagnostico():
                         if diferencia_fechas(fecha,fechas_movimiento[i-2]) < 0:#Se resta la fecha de baja actual, contra la fecha de alta del patrón anterior, si da número negativo, quiere decir que interfiere en las fechas, por lo tanto, trabajo con dos patrones en la misma fecha
                             doble_patron = True
         
-        
-        
-        
-        
-        
-        
-        
-
-        
-        
-        
-        
-        
-        
-        
 
 
     #Se restan días para que sumen 1750
@@ -475,7 +460,18 @@ def diagnostico():
 
 
     
-            
+    temp_excel = []  
+    fechas_movimiento = fechas_movimiento[:lasti+1]
+    for i in range(len(fechas_movimiento)):
+        temp_excel.append(fechas_movimiento[i]+ "	" + salarios_base[i])
+    excel = str(temp_excel).replace("[","")
+    excel = excel.replace("]","")
+    excel = excel.replace("'","")
+    excel = excel.replace(", ","\n")
+    excel = excel.replace(r"\t ","	")
+    excel = excel.replace(r"\t"," ")
+    pc.copy(excel)
+
 
     #region Clipboard
     #Copiar fechas y salarios solo hasta donde fueron 1750 días
@@ -509,6 +505,8 @@ def diagnostico():
     # ponderacion = ponderacion.replace(", ","\n")
     # pc.copy(ponderacion)
     # input("PONDERACION EN EL CLIPBOARD")
+
+
     #endregion Clipboard
     """
     if input("Modo exacto. Usar semanas exactas, sino usar 250. (y/n)") == "y":
