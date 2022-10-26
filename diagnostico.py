@@ -311,16 +311,18 @@ def diagnostico():
         n_id_filtrados = []
         n_tipos_filtrados = []
 
-
         # Elimino los espacios donde hubo separacion entre patrones
-        for i,j in enumerate(fechas_filtradas):
-            if j != "":
-                n_indice_filtro.append(indice_filtro[i])
-                n_fechas_vs_pivote.append(fechas_vs_pivote[i])
-                n_fechas_filtradas.append(fechas_filtradas[i])
-                n_sueldos_filtrados.append(sueldos_filtrados[i])
-                n_id_filtrados.append(id_filtrados[i])
-                n_tipos_filtrados.append(tipos_filtrados[i])
+        try:
+            for i,j in enumerate(fechas_filtradas):
+                if j != "":
+                    n_indice_filtro.append(indice_filtro[i])
+                    n_fechas_vs_pivote.append(fechas_vs_pivote[i])
+                    n_fechas_filtradas.append(fechas_filtradas[i])
+                    n_sueldos_filtrados.append(sueldos_filtrados[i])
+                    n_id_filtrados.append(id_filtrados[i])
+                    n_tipos_filtrados.append(tipos_filtrados[i])
+        except:
+                print("POSIBLE ERROR CON DOBLE PATRON ")
 
 
         print("------")
@@ -363,7 +365,7 @@ def diagnostico():
         salarios_base_nuevo = salarios_base[:indice_primer_doble_patron] + saldos_filtradas_ordenadas +  salarios_base[indice_ultimo_doble_patron:]
 
         #region Clipboard temporal
-        #Copiar fechas y salarios solo hasta donde fueron 1750 días
+        # # Copiar fechas y salarios solo hasta donde fueron 1750 días
         # x = str(fechas_movimiento[:lasti+1]).replace("[","")
         # x = x.replace("]","")
         # x = x.replace("'","")
@@ -519,6 +521,10 @@ def diagnostico():
     input("salario_prom: " + str(salario_prom))
     """    
     salario_prom = round(sum_ponderacion/sum_semanas,2)
+
+
+
+
     #region Tabla
     
     tablaVSMi = [0, 1.01, 1.26, 1.51, 1.76, 2.01, 2.26, 2.51, 2.76, 3.01, 3.26, 3.51, 3.76, 4.01, 4.26, 4.51, 4.76, 5.01, 5.26, 5.51, 5.76, 6.01]
