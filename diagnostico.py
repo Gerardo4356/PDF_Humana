@@ -310,6 +310,8 @@ def diagnostico():
         n_sueldos_filtrados = []
         n_id_filtrados = []
         n_tipos_filtrados = []
+
+
         # Elimino los espacios donde hubo separacion entre patrones
         for i,j in enumerate(fechas_filtradas):
             if j != "":
@@ -463,13 +465,14 @@ def diagnostico():
     temp_excel = []  
     fechas_movimiento = fechas_movimiento[:lasti+1]
     for i in range(len(fechas_movimiento)):
-        temp_excel.append(fechas_movimiento[i]+ "	" + salarios_base[i])
+        temp_excel.append(str(fechas_movimiento[i])+ "	" + str(salarios_base[i]))
     excel = str(temp_excel).replace("[","")
     excel = excel.replace("]","")
     excel = excel.replace("'","")
     excel = excel.replace(", ","\n")
     excel = excel.replace(r"\t ","	")
-    excel = excel.replace(r"\t"," ")
+    excel = excel.replace(r"\t","	")
+    # input(excel)
     pc.copy(excel)
 
 
@@ -602,6 +605,8 @@ def diagnostico():
 
     
     #Dando formato final de números
+    #Agregando signo de pesos
+    tabla[1] = "${:,}".format(tabla[1])
     tabla[8] = round(tabla[8]*100,2)
     tabla[9] = round(tabla[9]*100,2)   
     tabla[10] = "${:,}".format(math.trunc(round(tabla[10],0)))
@@ -612,6 +617,7 @@ def diagnostico():
     tabla[15] = "${:,}".format(math.trunc(round(tabla[15],0)))
     tabla[16] = "${:,}".format(math.trunc(round(tabla[16],0)))
     tabla[17] = round(tabla[17],0)
+    tabla[17] = "${:,}".format(math.trunc(tabla[17]))
     
     # tabla[0]          SEMANAS COTIZADAS
     # tabla[1]          SALARIO PROMEDIO
@@ -669,7 +675,7 @@ def diagnostico():
     p = document.add_paragraph('EDAD: ' + str(EDAD_exacta.years) + ' años, '+str(EDAD_exacta.months)+' meses, '+str(EDAD_exacta.days)+' días.')
     p = document.add_paragraph('UMA 2022: $96,22')
     p = document.add_paragraph('SEMANAS COTIZADAS: '+str(semanas_cotizadas))
-    p = document.add_paragraph('SALARIO PROMEDIO: '+str(salario_prom))
+    p = document.add_paragraph('SALARIO PROMEDIO: '+str("${:,}".format(salario_prom)))
     p = document.add_paragraph('ESTATUS: '+text[60])
     p = document.add_paragraph('')
 
@@ -797,21 +803,26 @@ def diagnostico():
     
     # Llenando contenido
     for i, fila in enumerate(filas):
-        tabla_word.rows[i].cells[0].text = fila
-        if i<len(tabla): tabla_word.rows[i].cells[1].text = str(tabla[i])
+        tabla_word.rows[i].cells[0].text = fila                             #Escribir el elemento de filas en el renglon
+        if i<len(tabla): tabla_word.rows[i].cells[1].text = str(tabla[i])   #Escribir los datos numericos de tabla
     tabla_word.rows[16].cells[2].text = "100%"
     tabla_word.rows[17].cells[2].text = str(round(porcentaje,0)) + "%"
     # tabla_word.style = "Table Grid"
     
     
     for row in tabla_word.rows:
-        for cell in row.cells:
+        for i, cell in enumerate(row.cells):
             paragraphs = cell.paragraphs
+            if i == 2:                  #Centrar columna 2
+                paragraph.alignment = 1 #Centrar columna 2
             for paragraph in paragraphs:
                 for run in paragraph.runs:
                     font = run.font
                     font.size= Pt(9)
                     font.color.rgb = RGBColor(0, 0, 0)
+
+
+                    
                     
     #Color a la ultima fila
     for i in range(3):
@@ -844,8 +855,10 @@ def diagnostico():
 
     p.add_run("En la constancia electrónica se reconocen "+ str(semanas_reconocidas) +" semanas. "+ str(semanas_desconocidas) +" semanas descontadas.")
     p.add_run("Recibiría pensión mínima garantizada que en 2022 es de $"+str(pension_minima)+" pesos.").font.highlight_color = WD_COLOR_INDEX.YELLOW
-    p.add_run("\nLe podemos hacer una propuesta para ayudarlo a obtener una pensión arriba de "+    "**"    +" mil pesos desde "+   "**"  +" de "+ "2022"  +". Hagamos una cita para ver si califica.")
     p.alignment=3
+    p = document.add_paragraph("\n")
+    p.add_run("Le podemos hacer una propuesta para ayudarlo a obtener una pensión arriba de "+    "**"    +" mil pesos desde "+   "**"  +" de "+ "2022"  +". Hagamos una cita para ver si califica.")
+    p.add_run("(+"+str(semanas_reintegradas)+").").bold = True  
 
 
     document.save('demo.docx')
