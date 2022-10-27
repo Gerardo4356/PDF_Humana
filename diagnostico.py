@@ -74,13 +74,15 @@ def diagnostico():
         print(str(i)+"\t"+pdf)
     
     #reciclando variable files para escoger uno de los files
-    """
-    files = int(input("Archivo a leer: "))
-    while not (files>=0 and files<=len(pdfs)-1):
-      files = int(input("Archivo a leer: "))
-    input("Archivo elegido: "+pdfs[files])
-    print("------------------")
-    """
+
+    # """
+    # files = int(input("Archivo a leer: "))
+    # while not (files>=0 and files<=len(pdfs)-1):
+    #   files = int(input("Archivo a leer: "))
+    # input("Archivo elegido: "+pdfs[files])
+    # print("------------------")
+    # """
+
     os.system("cls")
     files = 0
     
@@ -154,7 +156,7 @@ def diagnostico():
 
     #Si es vigente, se agrega el final del mes
     vigente = False
-    if text[60] == "Vigente" or text[60] == "Vigente":
+    if text[60] == "Vigente" or text[60] == "Vigente" or "Vigente" in text:
         # input("Vigente")
         print("Vigente")
         vigente = True
@@ -167,6 +169,8 @@ def diagnostico():
 
     #Quitar signo de pesos en salarios_base
     for i,salarios in enumerate(salarios_base): salarios_base[i] = salarios_base[i].replace("$","")
+
+    
 
     #Para obtener lasti y cortar solo a cuando hemos superado los 1750 días
     dias = []
@@ -234,10 +238,11 @@ def diagnostico():
 
 
         id_patrones = []
-        tipo = []
-        contador = 0
+        tipo = []       
+        contador = 0    
         #Aqui se escribe dos arrays, uno para id de patrones, y otro para starus
         for i,fecha in enumerate(fechas_movimiento):
+            input(fecha)
             if fecha != "":
                 id_patrones.append(contador)
             else:
@@ -296,7 +301,55 @@ def diagnostico():
         sueldos_filtrados = salarios_base[indice_primer_doble_patron: indice_ultimo_doble_patron+1]
         id_filtrados = id_patrones[indice_primer_doble_patron: indice_ultimo_doble_patron+1]
         tipos_filtrados = tipo[indice_primer_doble_patron: indice_ultimo_doble_patron+1]
+
         
+        print(fechas_movimiento)
+        input("---------")
+        print(tipo)
+        input("---------")
+        
+        print(fechas_filtradas)
+        input("--")
+        print(sueldos_filtrados)
+        input("--")
+        print(id_filtrados)
+        input("--")
+        print(tipos_filtrados)
+        input("--")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         fechas_vs_pivote = []
         for i in fechas_filtradas:
             if i != "" : 
@@ -312,17 +365,15 @@ def diagnostico():
         n_tipos_filtrados = []
 
         # Elimino los espacios donde hubo separacion entre patrones
-        try:
-            for i,j in enumerate(fechas_filtradas):
-                if j != "":
-                    n_indice_filtro.append(indice_filtro[i])
-                    n_fechas_vs_pivote.append(fechas_vs_pivote[i])
-                    n_fechas_filtradas.append(fechas_filtradas[i])
-                    n_sueldos_filtrados.append(sueldos_filtrados[i])
-                    n_id_filtrados.append(id_filtrados[i])
-                    n_tipos_filtrados.append(tipos_filtrados[i])
-        except:
-                print("POSIBLE ERROR CON DOBLE PATRON ")
+        for i,j in enumerate(fechas_filtradas):
+            if j != "":
+                n_indice_filtro.append(indice_filtro[i])
+                n_fechas_vs_pivote.append(fechas_vs_pivote[i])
+                n_fechas_filtradas.append(fechas_filtradas[i])
+                n_sueldos_filtrados.append(sueldos_filtrados[i])
+                n_id_filtrados.append(id_filtrados[i])
+                n_tipos_filtrados.append(tipos_filtrados[i])
+
 
 
         print("------")
@@ -363,7 +414,6 @@ def diagnostico():
 
         fechas_movimiento_nuevo = fechas_movimiento[:indice_primer_doble_patron] + fechas_filtradas_ordenadas + fechas_movimiento[indice_ultimo_doble_patron:]
         salarios_base_nuevo = salarios_base[:indice_primer_doble_patron] + saldos_filtradas_ordenadas +  salarios_base[indice_ultimo_doble_patron:]
-
         #region Clipboard temporal
         # # Copiar fechas y salarios solo hasta donde fueron 1750 días
         # x = str(fechas_movimiento[:lasti+1]).replace("[","")
