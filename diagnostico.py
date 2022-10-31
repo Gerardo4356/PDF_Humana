@@ -109,7 +109,12 @@ def diagnostico(path="PDF/test0.pdf"):
 
         if "Vigente" == line:
             # Detecto un vigente, y guardo una varible como true, para saltarme el cambio de patrón
-            ultimo_dia_mes = str(calendar.monthrange(date.today().year,date.today().month)[1]) + "/" + str(date.today().month) + "/" + str(date.today().year)
+            if date.today().day >= 30:
+                ultimo_dia_mes = str(calendar.monthrange(date.today().year,date.today().month+1)[1]) + "/" + str(date.today().month+1) + "/" + str(date.today().year)
+            else:
+                ultimo_dia_mes = str(calendar.monthrange(date.today().year,date.today().month)[1]) + "/" + str(date.today().month) + "/" + str(date.today().year)
+
+            
             fechas_movimiento.append("")
             salarios_base.append("")
             fechas_movimiento.append(ultimo_dia_mes)
@@ -217,18 +222,6 @@ def diagnostico(path="PDF/test0.pdf"):
         tipos_filtrados = tipo[indice_primer_doble_patron: indice_ultimo_doble_patron+1]
 
         
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -643,7 +636,11 @@ def diagnostico(path="PDF/test0.pdf"):
     p = document.add_paragraph('UMA 2022: $96,22')
     p = document.add_paragraph('SEMANAS COTIZADAS: '+str(semanas_cotizadas))
     p = document.add_paragraph('SALARIO PROMEDIO: '+str("${:,}".format(salario_prom)))
-    p = document.add_paragraph('ESTATUS: '+text[60])
+    if vigente:
+        p = document.add_paragraph('ESTATUS: VIGENTE')
+    else:
+        p = document.add_paragraph('ESTATUS: '+text[60])
+        
     p = document.add_paragraph('')
 
 
@@ -668,7 +665,7 @@ def diagnostico(path="PDF/test0.pdf"):
     tabla_word = document.add_table(1,cols=4)
     tabla_word.rows[0].cells[0].text = "SEMANAS COTIZADAS"
     tabla_word.rows[0].cells[1].text = ""
-    tabla_word.rows[0].cells[2].text = "CODIGO VIGENTE"
+    tabla_word.rows[0].cells[2].text = "CODIGO"
 
 # CALCULO!C8<=800,"2",SI(CALCULO!C8<1200,"3",SI(CALCULO!C8<1600,"4",SI(CALCULO!C8>1600,"5"))))
     semanas_cotizadas = int(semanas_cotizadas)
@@ -815,19 +812,40 @@ def diagnostico(path="PDF/test0.pdf"):
 
 
     p = document.add_paragraph('En la consulta se consideraron las semanas al día ' +date.today().strftime('%d/%m/%Y') + " y el salario promedio de la misma constancia. ")
-    p.add_run("Representa la pensión que la persona recibiría. ")
+    
+    r = p.add_run("Representa la pensión que la persona recibiría hoy. ")
+    r.bold = True
+    r.underline = True
+
+
     if EDAD < 60:
-        p.add_run("al cumplir "+str(EDAD)+" años. ").bold
+        p.add_run("al cumplir 60 años. ").bold
     else: p.add_run("")
 
-    p.add_run("En la constancia electrónica se reconocen "+ str(semanas_reconocidas) +" semanas. "+ str(semanas_desconocidas) +" semanas descontadas.")
+
+    p.add_run("En la constancia electrónica se reconocen "+ str(semanas_reconocidas) +" semanas. "+ str(semanas_desconocidas) +" semanas descontadas. "+str(semanas_reintegradas)+" semanas reintegradas. ")
+    
+
     p.add_run("Recibiría pensión mínima garantizada que en 2022 es de $"+str(pension_minima)+" pesos.").font.highlight_color = WD_COLOR_INDEX.YELLOW
+    
     p.alignment=3
     p = document.add_paragraph("\n")
-    p.add_run("Le podemos hacer una propuesta para ayudarlo a obtener una pensión arriba de "+    "**"    +" mil pesos desde "+   "**"  +" de "+ "2022"  +". Hagamos una cita para ver si califica.")
-    p.add_run("(+"+str(semanas_reintegradas)+").").bold = True  
+    p.add_run("Le podemos hacer una propuesta para ayudarlo a obtener una pensión arriba de ")
+    
+    r = p.add_run("**"    +" mil pesos ")
+    r.bold = True
+    r.font.highlight_color = WD_COLOR_INDEX.YELLOW
 
-    document_name = "demo_" + str(text[6].replace(" ","_")) +".docx"
+    p.add_run("desde ")
+
+    p.add_run("** de 202*. ").bold = True
+
+    p.add_run("Hagamos una cita para ver si califica. ")
+    p.add_run("(+"+str(int(semanas_desconocidas)-int(semanas_reintegradas))+").")
+
+    p = document.add_paragraph("*El monto de su pensión puede llegar a variar dependiendo de su aja con el patrón. (Baja calculada al día "+ultimo_dia_mes+" ")
+
+    document_name = r"DIAGNOSTICOS/demo_" + str(text[6].replace(" ","_")) +".docx"
     document.save(document_name)
     #endregion
 
@@ -841,5 +859,6 @@ if __name__ == "__main__":
     os.system("taskkill /IM WINWORD.exe")
     os.system('cls')
     # diagnostico(r"PDF\vigente.pdf")
-    diagnostico(r"PDF\errorformato3.pdf")
+    # diagnostico(r"PDF\errorformato3.pdf")
     # diagnostico(r"PDF\vigente_viejo.pdf")
+    diagnostico(r"PDF\constancia_JUANA MARIA CARREON RODRIGUEZ.pdf")
