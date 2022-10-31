@@ -19,6 +19,8 @@ from docx.shared import Pt #Tamaño de letra
 from docx.shared import Cm, Inches # Ancho de columnas de tabla
 from docx.enum.text import WD_COLOR_INDEX #Subrayar
 
+
+#
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
@@ -55,13 +57,43 @@ def copiar(array):
     x = x.replace(", ","\n")
     pc.copy(x)
     
-def diagnostico(path="PDF/test0.pdf"):
+
+def diagnostico():
     from datetime import date
-    text = extract_text(path).split("\n")
 
+    #Elegir pdf
+    files = os.listdir(os.getcwd()+"/PDF")
+    pdfs = []
+    for i in files:
+        if "pdf" in i:
+            pdfs.append(i)
+        else: pass
 
-    #region Extrayendo texto del pdf 
-    # Obtener datos del encabezado
+    print("Escoge un archivo: ")
+    for i,pdf in enumerate(pdfs):
+        print(str(i)+"\t"+pdf)
+    
+    #reciclando variable files para escoger uno de los files
+
+    # """
+    # files = int(input("Archivo a leer: "))
+    # while not (files>=0 and files<=len(pdfs)-1):
+    #   files = int(input("Archivo a leer: "))
+    # input("Archivo elegido: "+pdfs[files])
+    # print("------------------")
+    # """
+
+    os.system("cls")
+    files = 0
+    
+    
+    
+    # Leyendo el PDF,l
+    text = extract_text("PDF/"+pdfs[files]).split("\n")
+    # for i, j in enumerate(text):
+    #     if j == "": continue
+    #     else: input(str(i)+"\t"+str(j))
+
     pension_minima = 5836  # 2022 lo da el gobierno cada año
     semanas_cotizadas = text[23]
     semanas_reconocidas = text[34]
@@ -77,22 +109,19 @@ def diagnostico(path="PDF/test0.pdf"):
     cumple_dia = CURP[8:10].lstrip("0")
     EDAD = edad(date(int(cumple_anio), int(cumple_mes), int(cumple_dia)))
 
-
-    #Obteniendo datos linea por línea
-
-        # For para concontrar la columna de fechas de movimiento
-        # Patrones es la cantidad de patrones que ha tenido
-        # Fechas es una variable candado para saltarnos la fecha de alta y de baja (que no es la de fecha de movimiento)
-        # En fechas_de_movimiento se guardan todas las fechas de la columna fecha de movimiento
-        # salarios es variable candado para saltarnos el del encabezado
-    
+    # For para concontrar la columna de fechas de movimiento
+    # Patrones es la cantidad de patrones que ha tenido
+    # Fechas es una variable candado para saltarnos la fecha de alta y de baja (que no es la de fecha de movimiento)
+    # En fechas_de_movimiento se guardan todas las fechas de la columna fecha de movimiento
+    # salarios es variable candado para saltarnos el del encabezado
     patrones = 0
     lastpatrones = 0
     fechas = 1
     salarios = 0
     fechas_movimiento = []
     salarios_base = []
-    vigente = False
+    
+
     for i, line in enumerate(text):
         if line == "":
             continue
@@ -107,60 +136,107 @@ def diagnostico(path="PDF/test0.pdf"):
         if "Fecha de alta" == line:
             fechas = 0
 
-        if "Vigente" == line:
-            # Detecto un vigente, y guardo una varible como true, para saltarme el cambio de patrón
-            ultimo_dia_mes = str(calendar.monthrange(date.today().year,date.today().month)[1]) + "/" + str(date.today().month) + "/" + str(date.today().year)
-            fechas_movimiento.append("")
-            salarios_base.append("")
-            fechas_movimiento.append(ultimo_dia_mes)
-            salarios_base.append("0")
-            vigente = True
-
         if patrones > 0 and fechas == 1:
             try:
                 date = datetime.strptime(line, '%d/%m/%Y')
                 fechas_movimiento.append(line)
-                vigente = False
             except:
                 pass
+
         if patrones > 0 and salarios == 1:
             if '$' in line:
                 salarios_base.append(line)
-                vigente = False
 
         if lastpatrones != patrones:
             # Hubo cambio de patron
-            if not vigente:
-                fechas_movimiento.append("")
-                salarios_base.append("")
+            fechas_movimiento.append("")
+            salarios_base.append("")
         lastpatrones = patrones
-    # Quitar signo de pesos en salarios_base
+
+
+    #Si es vigente, se agrega el final del mes
+    vigente = False
+    if text[60] == "Vigente" or text[60] == "Vigente" or "Vigente" in text:
+        # input("Vigente")
+        print("Vigente")
+        vigente = True
+        ultimo_dia_mes = str(calendar.monthrange(date.today().year,date.today().month)[1]) + "/" + str(date.today().month) + "/" + str(date.today().year)
+        fechas_movimiento[0] = ultimo_dia_mes
+        salarios_base[0] = salarios_base[1]
+        fechas_movimiento = [""] + fechas_movimiento
+        salarios_base = [""] + salarios_base
+
+
+    #Quitar signo de pesos en salarios_base
     for i,salarios in enumerate(salarios_base): salarios_base[i] = salarios_base[i].replace("$","")
 
-    #endregion extrayendo texto del pdf
+    
 
-    """ Cambio con relación a la versión anterior: Antes se cortaba desde el inicio, hasta donde llegaran 250 semanas cotizadas. Ahora se elimina esta limitante, y se itera hasta que termina todas las fechas. """
+    #Para obtener lasti y cortar solo a cuando hemos superado los 1750 días
+    dias = []
+    dias_laborados = 0
+    lasti = 0
+    for i,fecha in enumerate(fechas_movimiento):
+        if dias_laborados <= 1750:
+            if fecha != "" and fechas_movimiento[i-1] != "":
+                diff = diferencia_fechas(fecha,fechas_movimiento[i-1])
+                if diff < 1: 
+                    dias.append("") 
+                    # input("Patrón sin valor")
+                    print("Patrón sin valor")
+                else: #Si hay diferencia positiva de días, se agregan a los arrays
+                    # print(fechas_movimiento[i-1])
+                    # print(fecha)
+                    dias.append(diff)
+                    dias_laborados += diff
+                    lasti = i
+            else:
+                dias.append("")
+        else: continue
 
-    #region Doble Patron
-    #Checar si existe doble patrón
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    ######################################################################################################################
+    #Se detectan los dobles patrones
+    ######################################################################################################################
+
+    
     doble_patron = False
     for i,fecha in enumerate(fechas_movimiento):
-        if i > 1:  #A partir de esta fila (2) es cuando se puede detectar el doble patrón. 
+        if i > 1 and i< lasti+1:  #A partir de esta fila (2) es cuando se puede detectar el doble patrón. También si ya cruzamos el último antes de las 250 semanas, se cancela el chequeo
             if fechas_movimiento[i-1] == "": #Si hubo un cambio de patrón, se debe verificar si hubo doble patrón
                 if fecha != "" and fechas_movimiento[i-2] != "":    # Cuando haya patrones sin valor, se skipea
                     if diferencia_fechas(fecha,fechas_movimiento[i-2]) < 0:#Se resta la fecha de baja actual, contra la fecha de alta del patrón anterior, si da número negativo, quiere decir que interfiere en las fechas, por lo tanto, trabajo con dos patrones en la misma fecha
                         doble_patron = True
 
-
-
-
-    # Corregir doble patrón
-    ##################
-    # Nota: Reciclar el proceso anterior, pero eliminando el corte de 250 semanas
-    ##################
+    #Proceso doble patrón
     while doble_patron:
         #region Proceso doble patron
-        print("!! Doble patrón")
+        print("DOBLE PATRÓN")
+
+
         id_patrones = []
         tipo = []       
         contador = 0    
@@ -173,17 +249,26 @@ def diagnostico(path="PDF/test0.pdf"):
                 id_patrones.append("")
                 contador = contador + 1
             #Para escribir los tipos
-            if i<len(fechas_movimiento)-1:
+            if i<lasti:
                 if i>0 and fecha != "" and fechas_movimiento[i-1] == "": tipo.append("BAJA")
-                if i>0 and fecha != "" and fechas_movimiento[i-1] != "" and fechas_movimiento[i+1] != "": tipo.append("CAMBIO")
+                if i>0 and fecha != ""                    and fechas_movimiento[i-1] != "" and fechas_movimiento[i+1] != "": tipo.append("CAMBIO")
                 if i>0 and fecha != "" and fechas_movimiento[i-1] != "" and fechas_movimiento[i+1] == "": tipo.append("ALTA")
        
+        tipo[lasti] = "ALTA" #Puede que la última fecha sea de un cambio, pero para el corte, lo convertimos en alta.
         rango_inicial = 0
         rango_final = 0
         #Sacar rango inicial y final para saber donde vamos a cambiar el array original
         for i,fecha in enumerate(fechas_movimiento):
+            
+            
+            
+            
             # if i > 1 and i< lasti+1:  #A partir de esta fila (2) es cuando se puede detectar el doble patrón. También si ya cruzamos el último antes de las 250 semanas, se cancela el chequeo
-            if i > 1 and i< len(fechas_movimiento):  #A partir de esta fila (2) es cuando se puede detectar el doble patrón. 
+            
+            
+            
+            
+            if i > 1 and i< len(fechas_movimiento):  #A partir de esta fila (2) es cuando se puede detectar el doble patrón. También si ya cruzamos el último antes de las 250 semanas, se cancela el chequeo
                 if fechas_movimiento[i-1] == "": #Si hubo un cambio de patrón, se debe verificar si hubo doble patrón
                     if fecha != "" and fechas_movimiento[i-2] != "":    # Cuando haya patrones sin valor, se skipea
                         if diferencia_fechas(fecha,fechas_movimiento[i-2]) < 0:#Se resta la fecha de baja actual, contra la fecha de alta del patrón anterior, si da número negativo, quiere decir que interfiere en las fechas, por lo tanto, trabajo con dos patrones en la misma fecha
@@ -217,7 +302,19 @@ def diagnostico(path="PDF/test0.pdf"):
         tipos_filtrados = tipo[indice_primer_doble_patron: indice_ultimo_doble_patron+1]
 
         
-
+        # print(fechas_movimiento)
+        # input("---------")
+        # print(tipo)
+        # input("---------")
+        
+        # print(fechas_filtradas)
+        # input("--")
+        # print(sueldos_filtrados)
+        # input("--")
+        # print(id_filtrados)
+        # input("--")
+        # print(tipos_filtrados)
+        # input("--")
 
 
 
@@ -267,15 +364,17 @@ def diagnostico(path="PDF/test0.pdf"):
         n_tipos_filtrados = []
 
         # Elimino los espacios donde hubo separacion entre patrones
-        for i,j in enumerate(fechas_filtradas):
-            if j != "":
-                n_indice_filtro.append(indice_filtro[i])
-                n_fechas_vs_pivote.append(fechas_vs_pivote[i])
-                n_fechas_filtradas.append(fechas_filtradas[i])
-                n_sueldos_filtrados.append(sueldos_filtrados[i])
-                n_id_filtrados.append(id_filtrados[i])
-                n_tipos_filtrados.append(tipos_filtrados[i])
-
+        try:
+            for i,j in enumerate(fechas_filtradas):
+                if j != "":
+                    n_indice_filtro.append(indice_filtro[i])
+                    n_fechas_vs_pivote.append(fechas_vs_pivote[i])
+                    n_fechas_filtradas.append(fechas_filtradas[i])
+                    n_sueldos_filtrados.append(sueldos_filtrados[i])
+                    n_id_filtrados.append(id_filtrados[i])
+                    n_tipos_filtrados.append(tipos_filtrados[i])
+        except:
+            print("Error en tipos")
 
 
         print("------")
@@ -350,40 +449,35 @@ def diagnostico(path="PDF/test0.pdf"):
         salarios_base = salarios_base_nuevo
 
 
+        # Para obtener lasti y cortar solo a cuando hemos superado los 1750 días
+        dias = []
+        dias_laborados = 0
+        lasti = 0
+        for i,fecha in enumerate(fechas_movimiento):
+            if dias_laborados <= 1750:
+                if fecha != "" and fechas_movimiento[i-1] != "":
+                    diff = diferencia_fechas(fecha,fechas_movimiento[i-1])
+                    if diff < 1: 
+                        dias.append("") 
+                        print("Patrón sin valor")
+                    else: #Si hay diferencia positiva de días, se agregan a los arrays
+
+                        dias.append(diff)
+                        dias_laborados += diff
+                        lasti = i
+                else:
+                    dias.append("")
+            else: continue
+
         #Verificar que no haya doble doble patrón
         doble_patron = False
         for i,fecha in enumerate(fechas_movimiento):
-            if i > 1:  #A partir de esta fila (2) es cuando se puede detectar el doble patrón. También si ya cruzamos el último antes de las 250 semanas, se cancela el chequeo
+            if i > 1 and i< lasti+1:  #A partir de esta fila (2) es cuando se puede detectar el doble patrón. También si ya cruzamos el último antes de las 250 semanas, se cancela el chequeo
                 if fechas_movimiento[i-1] == "": #Si hubo un cambio de patrón, se debe verific ar si hubo doble patrón
                     if fecha != "" and fechas_movimiento[i-2] != "":    # Cuando haya patrones sin valor, se skipea
                         if diferencia_fechas(fecha,fechas_movimiento[i-2]) < 0:#Se resta la fecha de baja actual, contra la fecha de alta del patrón anterior, si da número negativo, quiere decir que interfiere en las fechas, por lo tanto, trabajo con dos patrones en la misma fecha
                             doble_patron = True
         
-    #endregion Doble Patron
-
-    #region Cortar solo a cuando hemos superado los 1750 días
-    dias = []
-    dias_laborados = 0
-    lasti = 0
-    for i,fecha in enumerate(fechas_movimiento):
-        if dias_laborados <= 1750:
-            if fecha != "" and fechas_movimiento[i-1] != "":
-                diff = diferencia_fechas(fecha,fechas_movimiento[i-1])
-                if diff < 1: 
-                    dias.append("") 
-                    # input("Patrón sin valor")
-                    print("Patrón sin valor")
-                else: #Si hay diferencia positiva de días, se agregan a los arrays
-                    # print(fechas_movimiento[i-1])
-                    # print(fecha)
-                    dias.append(diff)
-                    dias_laborados += diff
-                    lasti = i
-            else:
-                dias.append("")
-        else: continue
-
-
 
 
     #Se restan días para que sumen 1750
@@ -393,21 +487,6 @@ def diagnostico(path="PDF/test0.pdf"):
         fechas_movimiento[lasti] = restar_dias(fechas_movimiento[lasti],dias_sobrantes)
         dias[-1] = dias[-1]-dias_sobrantes
     
-
-    #endregion Cortar solo a cuando hemos superado los 1750 días
-
-    #region Imprimir anormalidades
-    #Imprimir si vigente
-    if "Vigente" in text: 
-        print("-Vigente")
-        vigente = True
-    #Imprimir si doble patrón
-    if doble_patron: print("-Doble patrón")
-
-    #endregion Imprimir anormalidades
-
-    #region Calculos
-
     #Calculo de semanas
     semanas = []
     for i, num_dias in enumerate(dias): 
@@ -433,9 +512,9 @@ def diagnostico(path="PDF/test0.pdf"):
             if i != "":
                 sum_ponderacion += i
                 
-    #endregion Calculos
 
-    #region Clipboard
+
+    
     temp_excel = []  
     fechas_movimiento = fechas_movimiento[:lasti+1]
     for i in range(len(fechas_movimiento)):
@@ -450,6 +529,7 @@ def diagnostico(path="PDF/test0.pdf"):
     pc.copy(excel)
 
 
+    #region Clipboard
     #Copiar fechas y salarios solo hasta donde fueron 1750 días
     # fechas_movimiento = str(fechas_movimiento[:lasti+1]).replace("[","")
     # fechas_movimiento = fechas_movimiento.replace("]","")
@@ -484,10 +564,20 @@ def diagnostico(path="PDF/test0.pdf"):
 
 
     #endregion Clipboard
-
-    #region Tabla
+    """
+    if input("Modo exacto. Usar semanas exactas, sino usar 250. (y/n)") == "y":
+        salario_prom = round(sum_ponderacion/sum_semanas,2)
+    else:
+        salario_prom = round(sum_ponderacion/250,2)
+    input("salario_prom: " + str(salario_prom))
+    """    
     salario_prom = round(sum_ponderacion/sum_semanas,2)
 
+
+
+
+    #region Tabla
+    
     tablaVSMi = [0, 1.01, 1.26, 1.51, 1.76, 2.01, 2.26, 2.51, 2.76, 3.01, 3.26, 3.51, 3.76, 4.01, 4.26, 4.51, 4.76, 5.01, 5.26, 5.51, 5.76, 6.01]
     tablaVSMx = [1, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50, 3.75, 4.00, 4.25, 4.50, 4.75, 5.00, 5.25, 5.50, 5.75, 6.00, 25.00]
     tablaCB  = [.8000, .7711, .5818, .4923, .4267, .3765, .3368, .3048, .2783, .2560, .2370, .2207, .2065, .1939, .1829, .1730, .1641, .1561, .1488, .1422, .1362, .1300]
@@ -815,31 +905,30 @@ def diagnostico(path="PDF/test0.pdf"):
 
 
     p = document.add_paragraph('En la consulta se consideraron las semanas al día ' +date.today().strftime('%d/%m/%Y') + " y el salario promedio de la misma constancia. ")
-    p.add_run("Representa la pensión que la persona recibiría. ")
+    p.add_run("Representa la pensión que la persona recibiría. ").bold = True
     if EDAD < 60:
-        p.add_run("al cumplir "+str(EDAD)+" años. ").bold
+        p.add_run("al cumplir "+str(EDAD)+" años. ").bold = True
     else: p.add_run("")
 
-    p.add_run("En la constancia electrónica se reconocen "+ str(semanas_reconocidas) +" semanas. "+ str(semanas_desconocidas) +" semanas descontadas.")
+    p.add_run("En la constancia electrónica se reconocen "+ str(semanas_reconocidas) +" semanas. "+ str(semanas_desconocidas) +" semanas descontadas. ")
     p.add_run("Recibiría pensión mínima garantizada que en 2022 es de $"+str(pension_minima)+" pesos.").font.highlight_color = WD_COLOR_INDEX.YELLOW
     p.alignment=3
     p = document.add_paragraph("\n")
-    p.add_run("Le podemos hacer una propuesta para ayudarlo a obtener una pensión arriba de "+    "**"    +" mil pesos desde "+   "**"  +" de "+ "2022"  +". Hagamos una cita para ver si califica.")
+    p.add_run("Le podemos hacer una propuesta para ayudarlo a obtener una pensión arriba de ")
+    p.add_run("**"    +" mil pesos desde "+   "**"  +" de "+ "202*. ")
+    p.add_run("Hagamos una cita para ver si califica. ")
     p.add_run("(+"+str(semanas_reintegradas)+").").bold = True  
+    p.add_run(" Pudiera haber semanas no reconocidas (1981-1982)")  
 
-    document_name = "demo_" + str(text[6].replace(" ","_")) +".docx"
-    document.save(document_name)
+    p = document.add_paragraph("\n*El monto de su pensión puede llegar a variar dependiendo de su baja con le patrón*")
+
+    document.save('demo.docx')
     #endregion
-
-    os.system("start " + document_name)
-
-
-
-    
+    os.system("start demo.docx")
 
 if __name__ == "__main__":
+    import os
     os.system("taskkill /IM WINWORD.exe")
     os.system('cls')
-    # diagnostico(r"PDF\vigente.pdf")
-    diagnostico(r"PDF\errorformato3.pdf")
-    # diagnostico(r"PDF\vigente_viejo.pdf")
+
+    diagnostico()
