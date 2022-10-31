@@ -113,7 +113,7 @@ def diagnostico(path="PDF/test0.pdf"):
                 ultimo_dia_mes = str(calendar.monthrange(date.today().year,date.today().month+1)[1]) + "/" + str(date.today().month+1) + "/" + str(date.today().year)
             else:
                 ultimo_dia_mes = str(calendar.monthrange(date.today().year,date.today().month)[1]) + "/" + str(date.today().month) + "/" + str(date.today().year)
-
+ 
             
             fechas_movimiento.append("")
             salarios_base.append("")
@@ -224,27 +224,6 @@ def diagnostico(path="PDF/test0.pdf"):
         
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         fechas_vs_pivote = []
         for i in fechas_filtradas:
             if i != "" : 
@@ -350,6 +329,8 @@ def diagnostico(path="PDF/test0.pdf"):
                 if fechas_movimiento[i-1] == "": #Si hubo un cambio de patrón, se debe verific ar si hubo doble patrón
                     if fecha != "" and fechas_movimiento[i-2] != "":    # Cuando haya patrones sin valor, se skipea
                         if diferencia_fechas(fecha,fechas_movimiento[i-2]) < 0:#Se resta la fecha de baja actual, contra la fecha de alta del patrón anterior, si da número negativo, quiere decir que interfiere en las fechas, por lo tanto, trabajo con dos patrones en la misma fecha
+                            copiar(fechas_movimiento)
+                            input("Pausa")
                             doble_patron = True
         
     #endregion Doble Patron
@@ -842,8 +823,10 @@ def diagnostico(path="PDF/test0.pdf"):
 
     p.add_run("Hagamos una cita para ver si califica. ")
     p.add_run("(+"+str(int(semanas_desconocidas)-int(semanas_reintegradas))+").")
-
-    p = document.add_paragraph("*El monto de su pensión puede llegar a variar dependiendo de su aja con el patrón. (Baja calculada al día "+ultimo_dia_mes+" ")
+    p.add_run(" Pudiera haber semanas no reconocidad (19**-19**)")
+    p = document.add_paragraph("*El monto de su pensión puede llegar a variar dependiendo de su aja con el patrón. ")
+    if vigente:
+        p.add_run("Baja calculada al día "+ultimo_dia_mes+" ")
 
     document_name = r"DIAGNOSTICOS/demo_" + str(text[6].replace(" ","_")) +".docx"
     document.save(document_name)
@@ -861,4 +844,4 @@ if __name__ == "__main__":
     # diagnostico(r"PDF\vigente.pdf")
     # diagnostico(r"PDF\errorformato3.pdf")
     # diagnostico(r"PDF\vigente_viejo.pdf")
-    diagnostico(r"PDF\constancia_JUANA MARIA CARREON RODRIGUEZ.pdf")
+    diagnostico(r"PDF\constancia_VICTOR ORTIZ BARAJAS.pdf")
