@@ -1,6 +1,7 @@
 ENV/
 model/
 PDF/
+DIAGNOSTICOS/
 unsolved_captcha/temp.jpg
 __pycache__/
 demo.docx

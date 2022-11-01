@@ -2,137 +2,104 @@
 {% block body %}
 
 
-<form action="/diagnostico" method="POST" enctype="multipart/form-data">
-    
-    <legend class="mt-4">Seleccionar modo</legend>
-    <div class="form-check form-switch mb-5">
-      <input class="form-check-input" type="checkbox" id="switch_modo" onchange="Seleccionar_modo()">
-      <label class="form-check-label">Manual/Automático</label>
-    </div>
-
-    <div id="modo">
 
 
+        <form action="/diagnostico" method="POST" enctype="multipart/form-data">
 
-<!--Modo automatico-->
-    <!-- <div class="container mb-5">
-        <div class="row">
-            <div class="col-sm">
+            <legend class="mt-4">Seleccionar modo</legend>
+            <div class="form-check form-switch mb-5">
+                <input class="form-check-input" type="checkbox" id="switch_modo" onchange="Seleccionar_modo()">
+                <label class="form-check-label">Manual/Automático</label>
+            </div>
 
-                <legend>Paso 1: Datos</legend>
+            <div id="modo">
+
+
+
+                <!-- Modo automatico-->
+                <div class="container mb-5">
+                    <div class="row">
+                        <div class="col-sm">
+
+                            <legend>Paso 1: Datos</legend>
+                            <hr>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1" class="form-label mt-4">Email</label>
+                                <input type="email" class="form-control" id="exampleInputEmail1"
+                                    aria-describedby="emailHelp" name="correo" value="gerardocamarillodl@gmail.com"
+                                    placeholder="Ingrese email">
+
+                                <label class="col-form-label" for="inputDefault">CURP</label>
+                                <input type="text" class="form-control" placeholder="Default input" name="curp"
+                                    value="{{ datos.1 }}">
+                                <label class="col-form-label" for="inputDefault">NSS</label>
+                                <input type="text" class="form-control" placeholder="Default input" name="nss"
+                                    value="{{ datos.2 }}">
+
+                            </div>
+
+                            <center><input type="submit" name="Descargar" value="Descargar"
+                                    class="btn btn-primary mt-5 mx-auto">
+                            </center>
+
+                            {% for verificacion in verificaciones_descarga %}
+                            <div class="alert alert-dismissible alert-light">
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                <strong>{{ verificacion }}</strong>
+                            </div>
+                            {% endfor %}
+
+                        </div>
+                        <div class="col-sm">
+
+                            <legend>Paso 2: Descarga</legend>
+                            <hr>
+                            <center><input type="submit" name="Verificar" value="Verificar"
+                                    class="btn btn-primary mt-5 mx-auto">
+                            </center>
+                            {% for verificacion in verificaciones %}
+                            <div class="alert alert-dismissible alert-light">
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                <strong>{{ verificacion }}</strong>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-sm">
+
+                            <legend>Paso 3: Análisis</legend>
+                            <hr>
+                            <center>
+                                <button type="submit" name="Procesar" value="Procesar"
+                                    class="btn btn-primary mt-5 mx-auto">Procesar</button>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <!--Modo manual-->
+                <legend>Análisis de constancia</legend>
                 <hr>
                 <div class="form-group">
-                    <label for="exampleInputEmail1" class="form-label mt-4">Email</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                        name="correo" value = "gerardocamarillodl@gmail.com" placeholder="Ingrese email">
-
-                    <label class="col-form-label" for="inputDefault" >CURP</label>
-                    <input type="text" class="form-control" placeholder="Default input" name="curp" value="{{ datos.1 }}">
-                    <label class="col-form-label" for="inputDefault" >NSS</label>
-                    <input type="text" class="form-control" placeholder="Default input" name="nss" value="{{ datos.2 }}">
-
+                    <label for="formFile" class="form-label mt-4">Constancia detallada</label>
+                    <input class="form-control" type="file" name="ruta_pdf" id="ruta_pdf" accept=".pdf">
                 </div>
-
-                <center><input type="submit" name="Descargar" value="Descargar" class="btn btn-primary mt-5 mx-auto">
-                </center>
-
-                {% for verificacion in verificaciones_descarga %}
-                <div class="alert alert-dismissible alert-light">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    <strong>{{ verificacion }}</strong>
-                </div>
-                {% endfor %}
-
-            </div>
-            <div class="col-sm">
-
-
-                <legend>Paso 2: Descarga</legend>
-                <hr>
-
-                <center><input type="submit" name="Verificar" value="Verificar" class="btn btn-primary mt-5 mx-auto">
-                </center>
-
-
-                {% for verificacion in verificaciones %}
-                <div class="alert alert-dismissible alert-light">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    <strong>{{ verificacion }}</strong>
-                </div>
-                {% endfor %}
-
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            </div>
-            <div class="col-sm">
-
-                <legend>Paso 3: Análisis</legend>
-                <hr>
                 <center>
-                    <button type="submit" name="Procesar" value="Procesar"
+                    <button type="submit" name="Procesar_Manual" value="Procesar_Manual"
                         class="btn btn-primary mt-5 mx-auto">Procesar</button>
                 </center>
 
 
-
             </div>
-        </div>
-    </div> -->
 
+        </form>
 
-
-
-<!--Modo manual-->
-    <legend>Análisis de constancia</legend>
-    <hr>
-    <div class="form-group">
-        <label for="formFile" class="form-label mt-4">Constancia detallada</label>
-        <input class="form-control" type="file" name="ruta_pdf" id="ruta_pdf" accept=".pdf">
-      </div>
-    <center>
-        <button type="submit" name="Procesar_Manual" value="Procesar_Manual"
-            class="btn btn-primary mt-5 mx-auto">Procesar</button>
-    </center>
-
-
-</div>
-
-</form>
-
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+        <script>
     function Seleccionar_modo() {
         var div_modo = $("#modo");
         var switch_modo = document.querySelector('#switch_modo');
@@ -213,4 +180,4 @@
     }
 </script>
 
-{% endblock %} 
+        {% endblock %}

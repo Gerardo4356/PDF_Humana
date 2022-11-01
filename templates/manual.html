@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<form action="/manual" method="POST" enctype="multipart/form-data">
+
+                <!--Modo manual-->
+                <legend>Análisis de constancia</legend>
+                <hr>
+                <div class="form-group">
+                    <label for="formFile" class="form-label mt-4">Constancia detallada</label>
+                    <input class="form-control" type="file" name="ruta_pdf" id="ruta_pdf" accept=".pdf">
+                </div>
+                <center>
+                    <button type="submit" name="Procesar_Manual" value="Procesar_Manual"
+                        class="btn btn-primary mt-5 mx-auto">Procesar</button>
+                </center>
+
+</form>
+
+
+
+
+{% endblock %}
