@@ -62,7 +62,7 @@ def diagnostico(path="PDF/test0.pdf"):
 
     #region Extrayendo texto del pdf 
     # Obtener datos del encabezado
-    pension_minima = 5836  # 2022 lo da el gobierno cada año
+    pension_minima = "$5,836"  # 2022 lo da el gobierno cada año
     semanas_cotizadas = text[23]
     semanas_reconocidas = text[34]
     semanas_desconocidas = text[36]
@@ -857,13 +857,15 @@ def diagnostico(path="PDF/test0.pdf"):
 
     p = document.add_paragraph('En la consulta se consideraron las semanas al día ' +date.today().strftime('%d/%m/%Y') + " y el salario promedio de la misma constancia. ")
     
-    r = p.add_run("Representa la pensión que la persona recibiría hoy. ")
+    r = p.add_run("Representa la pensión que la persona recibiría hoy ")
     r.bold = True
     r.underline = True
 
 
     if EDAD < 60:
-        p.add_run("al cumplir 60 años. ").bold
+        r = p.add_run("al cumplir 60 años. ")
+        r.bold = True
+        r.underline = True
     else: p.add_run("")
 
 
@@ -887,11 +889,21 @@ def diagnostico(path="PDF/test0.pdf"):
     p.add_run("Hagamos una cita para ver si califica. ")
     p.add_run("(+"+str(int(semanas_desconocidas)-int(semanas_reintegradas))+").")
     p.add_run(" Pudiera haber semanas no reconocidas (19**-19**)")
-    p = document.add_paragraph("*El monto de su pensión puede llegar a variar dependiendo de su aja con el patrón. ")
+    
+    p = document.add_paragraph("\n*El monto de su pensión puede llegar a variar dependiendo de su baja con el patrón. ")
     if vigente:
-        p.add_run("Baja calculada al día "+ultimo_dia_mes+" ")
+        p.add_run("Baja esperada al día "+ultimo_dia_mes+" ")
 
-    document_name = r"DIAGNOSTICOS/demo_" + str(text[6].replace(" ","_")) +".docx"
+    
+    palabras =text[6].split(' ')
+    ap2=''.join(palabras[-1])
+    ap1=''.join(palabras[-2])
+    nom=' '.join(palabras[:-2])
+    nombre_completo = ap1 +" "+ ap2 +" " +nom
+    document_name = r"DIAGNOSTICOS/demo_" + str(nombre_completo.replace(" ","_")) +".docx"
+
+
+
     document.save(document_name)
     #endregion
 
