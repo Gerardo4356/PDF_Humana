@@ -265,15 +265,16 @@ def diagnostico(path="PDF/test0.pdf"):
         n_tipos_filtrados = []
 
         # Elimino los espacios donde hubo separacion entre patrones
-        for i,j in enumerate(fechas_filtradas):
-            if j != "":
-                n_indice_filtro.append(indice_filtro[i])
-                n_fechas_vs_pivote.append(fechas_vs_pivote[i])
-                n_fechas_filtradas.append(fechas_filtradas[i])
-                n_sueldos_filtrados.append(sueldos_filtrados[i])
-                n_id_filtrados.append(id_filtrados[i])
-                n_tipos_filtrados.append(tipos_filtrados[i])
-
+        try:
+            for i,j in enumerate(fechas_filtradas):
+                if j != "":
+                    n_indice_filtro.append(indice_filtro[i])
+                    n_fechas_vs_pivote.append(fechas_vs_pivote[i])
+                    n_fechas_filtradas.append(fechas_filtradas[i])
+                    n_sueldos_filtrados.append(sueldos_filtrados[i])
+                    n_id_filtrados.append(id_filtrados[i])
+                    n_tipos_filtrados.append(tipos_filtrados[i])
+        except: print("ERROR 277, precaución")
 
 
         print("------")

@@ -100,7 +100,7 @@ def automatico():
             print(curp)
             print(nss)
             try:
-                res = scraping.webscraping(nss,curp,correo,headless=True)
+                res = scraping.webscraping(nss,curp,correo,headless=False)
                 verificaciones_descarga.append(res)
             except Exception as e:
                 print(e)
