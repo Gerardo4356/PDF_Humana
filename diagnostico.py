@@ -62,7 +62,7 @@ def diagnostico(path="PDF/test0.pdf"):
 
     #region Extrayendo texto del pdf 
     # Obtener datos del encabezado
-    pension_minima = "$5,836"  # 2022 lo da el gobierno cada año
+    pension_minima = "5,836"  # 2022 lo da el gobierno cada año
     semanas_cotizadas = text[23]
     semanas_reconocidas = text[34]
     semanas_desconocidas = text[36]
@@ -579,7 +579,17 @@ def diagnostico(path="PDF/test0.pdf"):
 
     #Dependiendo de la edad se agrega la última fila
     EDAD_exacta = relativedelta(datetime.now(), datetime(int(cumple_anio), int(cumple_mes), int(cumple_dia))) #Funcion alterna para sacar meses y dias
-    if EDAD_exacta.months >= 6: EDAD = EDAD_exacta.years + 1 #Si se quita esta linea, sigue funcionando pero sin redondear edad
+    
+    #Si se quia ese if, sigue funcionando pero sin redondear edad
+    if EDAD <= 60:
+        EDAD = 60
+    elif EDAD >= 65:
+        EDAD = 65
+    elif EDAD >60 and EDAD <65:
+        if EDAD_exacta.months >=6:
+            EDAD = EDAD + 1
+        else:
+            pass #Edad no cambia
 
     if EDAD >= 65: 
         tabla[17] = tabla[16] * 1
@@ -677,6 +687,7 @@ def diagnostico(path="PDF/test0.pdf"):
     p = document.add_paragraph('NSS: '+NSS)
     p = document.add_paragraph('CURP: ' + CURP)
     p = document.add_paragraph('EDAD: ' + str(EDAD_exacta.years) + ' años, '+str(EDAD_exacta.months)+' meses, '+str(EDAD_exacta.days)+' días.')
+    p = document.add_paragraph('FECHA NACIMIENTO: ' + str(cumple_dia) + "/" + str(cumple_mes) + "/" + str(cumple_anio) )
     p = document.add_paragraph('UMA 2022: $96,22')
     p = document.add_paragraph('SEMANAS COTIZADAS: '+str(semanas_cotizadas))
     p = document.add_paragraph('SALARIO PROMEDIO: '+str("${:,}".format(salario_prom)))
@@ -806,8 +817,7 @@ def diagnostico(path="PDF/test0.pdf"):
     filas.append("TOTAL ASIGNACIONES")
     filas.append("INCREMENTO PRESIDENCIAL")
     filas.append("")
-    filas.append(str(EDAD)+" AÑOS.")
-
+    filas.append(str(EDAD) + " AÑOS.")
     
     # Llenando contenido
     for i, fila in enumerate(filas):
@@ -896,14 +906,19 @@ def diagnostico(path="PDF/test0.pdf"):
 
     
     palabras =text[6].split(' ')
-    ap2=''.join(palabras[-1])
-    ap1=''.join(palabras[-2])
-    nom=' '.join(palabras[:-2])
-    nombre_completo = ap1 +" "+ ap2 +" " +nom
-    document_name = r"DIAGNOSTICOS/demo_" + str(nombre_completo.replace(" ","_")) +".docx"
-
-
-
+    #Para cambiar orden del nombre, y nombrar así el documento
+    compuestos = ['da', 'de', 'del', 'la', 'las', 'los','y', 'i', 'san', 'santa']
+    if compuestos in palabras or len(palabras) > 4:
+        array_document_name = "demo_"
+    elif len(palabras) == 3:
+        array_document_name = palabras[-1:] + palabras[:-1] 
+    elif len(palabras) == 4:
+        array_document_name = palabras[-2:] + palabras[:-2] 
+    document_name = ""
+    for i in array_document_name:
+        document_name = document_name+i+" "
+    
+    document_name = r"DIAGNOSTICOS/demo_" +document_name[:-1].replace(" ","_") +".docx"
     document.save(document_name)
     #endregion
 
