@@ -350,16 +350,6 @@ def diagnostico(path="PDF/test0.pdf"):
 
 
 
-
-
-
-
-
-
-
-
-
-
         #region LASTI Puede dar un error en el futuro con el doble patrón.
         dias = []
         dias_laborados = 0
@@ -389,8 +379,8 @@ def diagnostico(path="PDF/test0.pdf"):
         #Verificar que no haya doble doble patrón
         doble_patron = False
         for i,fecha in enumerate(fechas_movimiento):
-            if i > 1 and lasti<+1:  #A partir de esta fila (2) es cuando se puede detectar el doble patrón. También si ya cruzamos el último antes de las 250 semanas, se cancela el chequeo
-                if fechas_movimiento[i-1] == "": #Si hubo un cambio de patrón, se debe verific ar si hubo doble patrón
+            if i > 1 and i < lasti+1:  #A partir de esta fila (2) es cuando se puede detectar el doble patrón. 
+                if fechas_movimiento[i-1] == "": #Si hubo un cambio de patrón, se debe verificar si hubo doble patrón
                     if fecha != "" and fechas_movimiento[i-2] != "":    # Cuando haya patrones sin valor, se skipea
                         if diferencia_fechas(fecha,fechas_movimiento[i-2]) < 0:#Se resta la fecha de baja actual, contra la fecha de alta del patrón anterior, si da número negativo, quiere decir que interfiere en las fechas, por lo tanto, trabajo con dos patrones en la misma fecha
                             doble_patron = True
