@@ -898,7 +898,7 @@ def diagnostico(path="PDF/test0.pdf"):
     
     palabras =text[6].split(' ')
     #Para cambiar orden del nombre, y nombrar así el documento
-    compuestos = ['da', 'de', 'del', 'la', 'las', 'los','y', 'i', 'san', 'santa']
+    compuestos = ['da', 'de', 'del', 'la', 'las', 'los','y', 'i', 'san', 'santa','DA', 'DE', 'DEL', 'LA', 'LAS', 'LOS','Y', 'I', 'SAN', 'SANTA']
     if compuestos in palabras or len(palabras) > 4:
         array_document_name = "demo_"
     elif len(palabras) == 3:
