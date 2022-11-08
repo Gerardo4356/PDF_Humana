@@ -5,6 +5,9 @@ import scraping
 import gmail
 import diagnostico
 import time
+#Para detectar si no existe folder
+import os
+
 app = Flask(__name__)
 verificaciones  = []
 verificaciones_descarga = []
@@ -153,4 +156,10 @@ def manual():
 
     
 if __name__ == "__main__":     # debug sirve en fase de pruebas para no tener que reiniciar a cada rato
+    if not os.path.isdir("DIAGNOSTICOS"):
+        os.makedirs("DIAGNOSTICOS")
+        print("Creando carpeta DIAGNOSTICOS")
+    if not os.path.isdir("PDF"):
+        os.makedirs("PDF")
+        print("Creando carpeta PDF")
     app.run(port=5000, debug=True)
