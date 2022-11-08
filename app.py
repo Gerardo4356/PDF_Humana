@@ -1,3 +1,4 @@
+#Para py installer: pyinstaller -w -F --add-data "templates;templates" --add-data "static;static" app.py
 from filecmp import DEFAULT_IGNORES
 from re import I
 from flask import Flask, render_template, request, redirect, url_for, flash, send_file
