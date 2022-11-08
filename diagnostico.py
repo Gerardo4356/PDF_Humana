@@ -900,7 +900,7 @@ def diagnostico(path="PDF/test0.pdf"):
     #Para cambiar orden del nombre, y nombrar así el documento
     compuestos = ['da', 'de', 'del', 'la', 'las', 'los','y', 'i', 'san', 'santa','DA', 'DE', 'DEL', 'LA', 'LAS', 'LOS','Y', 'I', 'SAN', 'SANTA']
     if compuestos in palabras or len(palabras) > 4:
-        array_document_name = "demo_"
+        array_document_name = ""
     elif len(palabras) == 3:
         array_document_name = palabras[-1:] + palabras[:-1] 
     elif len(palabras) == 4:
@@ -909,7 +909,7 @@ def diagnostico(path="PDF/test0.pdf"):
     for i in array_document_name:
         document_name = document_name+i+" "
     
-    document_name = r"DIAGNOSTICOS/demo_" +document_name[:-1].replace(" ","_") +".docx"
+    document_name = r"DIAGNOSTICOS/DIAGNOSTICO_" +document_name[:-1].replace(" ","_") +".docx"
     document.save(document_name)
     #endregion
 
