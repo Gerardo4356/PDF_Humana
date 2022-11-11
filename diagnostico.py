@@ -739,7 +739,7 @@ def diagnostico(path="PDF/test0.pdf"):
         tabla_word.rows[0].cells[3].text = codigo
     else: 
         anio = diferencia_fechas(text[60],date.today().strftime('%d/%m/%Y')) 
-        anio = int(round(anio/365,0))
+        anio = int(format(math.trunc(anio/365)))
 
         if anio < 1: anio = 1 #Si apenas está por cumplir el año
         print(anio)
