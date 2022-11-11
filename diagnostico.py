@@ -152,7 +152,7 @@ def diagnostico(path="PDF/test0.pdf"):
     dias_laborados = 0
     lasti = 0
     for i,fecha in enumerate(fechas_movimiento):
-        if dias_laborados <= 1750:
+        if dias_laborados <= 10000000:
             if fecha != "" and fechas_movimiento[i-1] != "":
                 diff = diferencia_fechas(fecha,fechas_movimiento[i-1])
                 if diff < 1: 
@@ -207,7 +207,7 @@ def diagnostico(path="PDF/test0.pdf"):
                 if i>0 and fecha != ""                    and fechas_movimiento[i-1] != "" and fechas_movimiento[i+1] != "": tipo.append("CAMBIO")
                 if i>0 and fecha != "" and fechas_movimiento[i-1] != "" and fechas_movimiento[i+1] == "": tipo.append("ALTA")
        
-        tipo[lasti] = "ALTA" #Puede que la última fecha sea de un cambio, pero para el corte, lo convertimos en alta.
+        tipo[-1] = "ALTA" #Puede que la última fecha sea de un cambio, pero para el corte, lo convertimos en alta.
 
         rango_inicial = 0
         rango_final = 0
@@ -314,8 +314,9 @@ def diagnostico(path="PDF/test0.pdf"):
         
         fechas_movimiento_nuevo = fechas_movimiento[:indice_primer_doble_patron] + fechas_filtradas_ordenadas + fechas_movimiento[indice_ultimo_doble_patron:]
         salarios_base_nuevo = salarios_base[:indice_primer_doble_patron] + saldos_filtradas_ordenadas +  salarios_base[indice_ultimo_doble_patron:]
+        
         #region Clipboard temporal
-        # # Copiar fechas y salarios solo hasta donde fueron 1750 días
+        # Copiar fechas y salarios solo hasta donde fueron 1750 días
         # x = str(fechas_movimiento[:lasti+1]).replace("[","")
         # x = x.replace("]","")
         # x = x.replace("'","")
@@ -356,7 +357,7 @@ def diagnostico(path="PDF/test0.pdf"):
         dias_laborados = 0
         lasti = 0
         for i,fecha in enumerate(fechas_movimiento):
-            if dias_laborados <= 1750:
+            if dias_laborados <= 10000000:
                 if fecha != "" and fechas_movimiento[i-1] != "":
                     diff = diferencia_fechas(fecha,fechas_movimiento[i-1])
                     if diff < 1: 
@@ -738,7 +739,7 @@ def diagnostico(path="PDF/test0.pdf"):
         tabla_word.rows[0].cells[3].text = codigo
     else: 
         anio = diferencia_fechas(text[60],date.today().strftime('%d/%m/%Y')) 
-        anio = int(round(anio/365,0))
+        anio = int(format(math.trunc(anio/365)))
 
         if anio < 1: anio = 1 #Si apenas está por cumplir el año
         print(anio)
@@ -922,7 +923,7 @@ def diagnostico(path="PDF/test0.pdf"):
 if __name__ == "__main__":
     os.system("taskkill /IM WINWORD.exe")
     os.system('cls')
-    diagnostico(r"PDF\constancia_CARLOS MARTIN ANGUIANO GARCIA.pdf")
+    # diagnostico(r"PDF\constancia_CARLOS MARTIN ANGUIANO GARCIA.pdf")
     diagnostico(r"PDF\test0.pdf")
     # diagnostico(r"PDF\Constancia FELIPE ZAMARRIPA CERVANTES.pdf")
     # diagnostico(r"PDF\constancia_JUANA MARIA CARREON RODRIGUEZ.pdf")
