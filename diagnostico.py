@@ -571,15 +571,16 @@ def diagnostico(path="PDF/test0.pdf"):
 
     #Dependiendo de la edad se agrega la última fila
     EDAD_exacta = relativedelta(datetime.now(), datetime(int(cumple_anio), int(cumple_mes), int(cumple_dia))) #Funcion alterna para sacar meses y dias
-    
+
     #Si se quia ese if, sigue funcionando pero sin redondear edad
-    if EDAD <= 60:
+    if EDAD < 60:
         EDAD = 60
     elif EDAD >= 65:
         EDAD = 65
-    elif EDAD >60 and EDAD <65:
-        if EDAD_exacta.months >=6:
+    elif EDAD >=60 and EDAD <65:
+        if EDAD_exacta.months >= 6:
             EDAD = EDAD + 1
+
         else:
             pass #Edad no cambia
 
