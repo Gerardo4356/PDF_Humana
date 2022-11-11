@@ -893,8 +893,8 @@ def diagnostico(path="PDF/test0.pdf"):
     p.add_run("(+"+str(int(semanas_desconocidas)-int(semanas_reintegradas))+").")
     p.add_run(" Pudiera haber semanas no reconocidas (19**-19**)")
     
-    p = document.add_paragraph("\n*El monto de su pensión puede llegar a variar dependiendo de su baja con el patrón. ")
-    if vigente:
+    if vigente: 
+        p = document.add_paragraph("\n*El monto de su pensión puede llegar a variar dependiendo de su baja con el patrón. ")
         p.add_run("Baja esperada al día "+ultimo_dia_mes+" ")
 
     
