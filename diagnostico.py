@@ -536,10 +536,13 @@ def diagnostico(path="PDF/test0.pdf"):
     tabla[3] = 1#input("CÓNYUGE (1 o 0): ")
     tabla[4] = 0#input("HIJOS (MENORES O ESTUDIANDO): ")
     tabla[5] = 0#input("PADRES (SOLO FALTA DE ESPOSA E HIJOS): ")
-    # input("EL SALARIO MINIMO DF ESTÁ ESTABLECIDO EN 96.22")
-    tabla[6] = 96.22
+    # input("EL SALARIO MINIMO DF ESTÁ ESTABLECIDO EN 2023 ES DE 103.74")
+    tabla[6] = 103.74 #UMA 
     tabla[7] = float(tabla[1])/float(tabla[6])
-    tabla[7] = round(tabla[7],2)
+    
+    tabla[7] = "{:.3f}".format(tabla[7])
+    tabla[7] = float(str(tabla[7])[:-1])
+    
     
     for i, VSMi in enumerate(tablaVSMi):
         if tablaVSMi[i] <= tabla[7] and tablaVSMx[i] >= tabla[7]:
@@ -681,7 +684,7 @@ def diagnostico(path="PDF/test0.pdf"):
     p = document.add_paragraph('CURP: ' + CURP)
     p = document.add_paragraph('EDAD: ' + str(EDAD_exacta.years) + ' años, '+str(EDAD_exacta.months)+' meses, '+str(EDAD_exacta.days)+' días.')
     p = document.add_paragraph('FECHA NACIMIENTO: ' + str(cumple_dia) + "/" + str(cumple_mes) + "/" + str(cumple_anio) )
-    p = document.add_paragraph('UMA 2022: $96,22')
+    p = document.add_paragraph('UMA 2023: $103,74')
     p = document.add_paragraph('SEMANAS COTIZADAS: '+str(semanas_cotizadas))
     p = document.add_paragraph('SALARIO PROMEDIO: '+str("${:,}".format(salario_prom)))
     if vigente:
