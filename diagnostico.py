@@ -62,7 +62,7 @@ def diagnostico(path="PDF/test0.pdf"):
 
     #region Extrayendo texto del pdf 
     # Obtener datos del encabezado
-    pension_minima = "5,836"  # 2022 lo da el gobierno cada año
+    pension_minima = "7,003"  # 2022 lo da el gobierno cada año
     semanas_cotizadas = text[23]
     semanas_reconocidas = text[34]
     semanas_desconocidas = text[36]
@@ -878,7 +878,7 @@ def diagnostico(path="PDF/test0.pdf"):
     p.add_run("En la constancia electrónica se reconocen "+ str(semanas_reconocidas) +" semanas. "+ str(semanas_desconocidas) +" semanas descontadas. "+str(semanas_reintegradas)+" semanas reintegradas. ")
     
 
-    p.add_run("Recibiría pensión mínima garantizada que en 2022 es de $"+str(pension_minima)+" pesos.").font.highlight_color = WD_COLOR_INDEX.YELLOW
+    p.add_run("Recibiría pensión mínima garantizada que en 2023 es de $"+str(pension_minima)+" pesos.").font.highlight_color = WD_COLOR_INDEX.YELLOW
     
     p.alignment=3
     p = document.add_paragraph("\n")

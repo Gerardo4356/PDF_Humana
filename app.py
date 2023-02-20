@@ -9,6 +9,11 @@ import time
 #Para detectar si no existe folder
 import os
 
+#Librerías para cerrar procesos previos y prevenir duplicados
+import psutil
+import signal
+import subprocess
+
 app = Flask(__name__)
 verificaciones  = []
 verificaciones_descarga = []
@@ -148,6 +153,16 @@ def manual():
 
     
 if __name__ == "__main__":     # debug sirve en fase de pruebas para no tener que reiniciar a cada rato
+
+    # Verifica si la aplicación ya está en ejecución y cierra la instancia anterior si es así
+    for proc in psutil.process_iter():
+        try:
+            if proc.name() == "app.exe" and proc.pid != os.getpid():
+                print("Cerrando la instancia anterior de la aplicación...")
+                os.kill(proc.pid, signal.SIGTERM)
+        except:
+            pass
+
     if not os.path.isdir("DIAGNOSTICOS"):
         os.makedirs("DIAGNOSTICOS")
         print("Creando carpeta DIAGNOSTICOS")
