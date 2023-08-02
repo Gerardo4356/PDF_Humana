@@ -799,7 +799,7 @@ def diagnostico(path="PDF/test0.pdf"):
     filas.append("SEMANAS COTIZADAS")
     filas.append("SALARIO PROMEDIO")
     filas.append("ASIGNACIONES FAMILIARES")
-    filas.append("CÓNYUGE/SOLTERÍA")
+    filas.append("CÓNYUGE/SOLEDAD")
     filas.append("HIJOS (MENORES O ESTUDIANDO)")
     filas.append("PADRES (SOLO FALTA DE ESPOSA E HIJOS)")
     filas.append("SALARIO MINIMO DF")
