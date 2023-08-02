@@ -55,7 +55,7 @@ def copiar(array):
     x = x.replace(", ","\n")
     pc.copy(x)
     
-def diagnostico(path="PDF/test0.pdf"):
+def diagnostico(path="PDF/test0.pdf", open_document=True):
     from datetime import date
     text = extract_text(path).split("\n")
 
@@ -917,8 +917,9 @@ def diagnostico(path="PDF/test0.pdf"):
     document_name = r"DIAGNOSTICOS/DIAGNOSTICO_" +document_name[:-1].replace(" ","_") +".docx"
     document.save(document_name)
     #endregion
-
-    os.system("start " + document_name)
+    if open_document:
+        os.system("start " + document_name)
+    return document_name
 
 
 
