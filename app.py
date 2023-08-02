@@ -156,6 +156,7 @@ def manual():
 if __name__ == "__main__":     # debug sirve en fase de pruebas para no tener que reiniciar a cada rato
 
     # Verifica si la aplicación ya está en ejecución y cierra la instancia anterior si es así
+    """
     for proc in psutil.process_iter():
         try:
             if proc.name() == "app.exe" and proc.pid != os.getpid():
@@ -170,4 +171,5 @@ if __name__ == "__main__":     # debug sirve en fase de pruebas para no tener qu
     if not os.path.isdir("PDF"):
         os.makedirs("PDF")
         print("Creando carpeta PDF")
+    """
     app.run(port=5000, debug=False)
