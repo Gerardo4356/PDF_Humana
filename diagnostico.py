@@ -692,8 +692,14 @@ def diagnostico(path="PDF/test0.pdf", open_document=True):
     else:
         p = document.add_paragraph('ESTATUS: '+text[60])
         
-    p = document.add_paragraph('')
+    p = document.add_paragraph('\n')
 
+    p = document.add_paragraph("Con base en la consulta de su Constancia de Semanas Cotizadas, se consideraron las semanas al día "+ date.today().strftime('%d/%m/%Y') +". El IMSS le reconoce "+str(semanas_reconocidas)+" semanas. "+str(semanas_desconocidas+" semanas no descontadas. " +str(semanas_reintegradas)+" semanas reintegradas."))
+                               
+    p= document.add_paragraph("")
+    r = p.add_run("Su pensión actual al cumplir 60 años sería de:")
+    r.bold = True
+    r.underline = True
 
     # SEMANAS COTIZADAS
     # SALARIO PROMEDIO
@@ -712,7 +718,7 @@ def diagnostico(path="PDF/test0.pdf", open_document=True):
     # TOTAL ASIGNACIONES
     # INCREMENTO PRESIDENCIAL
 
-
+    """
     tabla_word = document.add_table(1,cols=4)
     tabla_word.rows[0].cells[0].text = "SEMANAS COTIZADAS"
     tabla_word.rows[0].cells[1].text = ""
@@ -815,6 +821,7 @@ def diagnostico(path="PDF/test0.pdf", open_document=True):
     filas.append("")
     filas.append(str(EDAD) + " AÑOS.")
     
+
     # Llenando contenido
     for i, fila in enumerate(filas):
         tabla_word.rows[i].cells[0].text = fila                             #Escribir el elemento de filas en el renglon
@@ -835,7 +842,6 @@ def diagnostico(path="PDF/test0.pdf", open_document=True):
                     font.size= Pt(9)
                     font.color.rgb = RGBColor(0, 0, 0)
 
-
                     
                     
     #Color a la ultima fila
@@ -851,6 +857,7 @@ def diagnostico(path="PDF/test0.pdf", open_document=True):
         for idx, width in enumerate(widths):
             row.cells[idx].width = width
 
+    """
 
     
 
