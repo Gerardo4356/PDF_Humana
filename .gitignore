@@ -6,3 +6,6 @@ unsolved_captcha/temp.jpg
 __pycache__/
 demo.docx
 token.json
+venv/
+dist/
+build/
