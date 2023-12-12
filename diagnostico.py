@@ -18,6 +18,7 @@ from docx.shared import RGBColor  # Color letra
 from docx.shared import Pt #Tamaño de letra
 from docx.shared import Cm, Inches # Ancho de columnas de tabla
 from docx.enum.text import WD_COLOR_INDEX #Subrayar
+from docx.enum.table import WD_TABLE_ALIGNMENT #Centrado de tabla
 
 from datetime import date
 from datetime import datetime
@@ -55,7 +56,7 @@ def copiar(array):
     x = x.replace(", ","\n")
     pc.copy(x)
     
-def diagnostico(path="PDF/test0.pdf"):
+def diagnostico(path="PDF/test0.pdf", open_document=False):
     from datetime import date
     text = extract_text(path).split("\n")
 
@@ -692,9 +693,75 @@ def diagnostico(path="PDF/test0.pdf"):
     else:
         p = document.add_paragraph('ESTATUS: '+text[60])
         
-    p = document.add_paragraph('')
+    p = document.add_paragraph('\n')
+
+    p = document.add_paragraph("Con base en la consulta de su Constancia de Semanas Cotizadas, se consideraron las semanas al día "+ date.today().strftime('%d/%m/%Y') +". El IMSS le reconoce "+str(semanas_reconocidas)+" semanas. "+str(semanas_desconocidas+" semanas no descontadas. " +str(semanas_reintegradas)+" semanas reintegradas."))
+                               
+    p= document.add_paragraph("")
+    r = p.add_run("Su pensión actual al cumplir 60 años sería de:\n")
+    r.bold = True
+    r.underline = True
+
+    table = document.add_table(rows=1, cols=2, style='Table Grid')
+    table.cell(0, 1).width = Inches(2.0)
+    table.cell(0, 0).width = Inches(2.0)
+    table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    color = parse_xml(r'<w:shd {} w:fill="B760E6"/>'.format(nsdecls('w')))
+    table.rows[0].cells[0]._tc.get_or_add_tcPr().append(color)
+    p = table.rows[0].cells[0].add_paragraph()
+    r = p.add_run("Su pensión será\n")
+    r.font.color.rgb = RGBColor(0x00, 0x00, 0x00)
+    r.bold = True
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p = table.rows[0].cells[1].add_paragraph()
+    r = p.add_run(str(tabla[17]))
+    r.font.color.rgb = RGBColor(0x00, 0x00, 0x00)
+    r.bold = True
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
 
+    p= document.add_paragraph("\n")
+    r = p.add_run("En ")
+    r = p.add_run("Humana Pensiones ")
+    r.font.color.rgb = RGBColor(0x70, 0x30, 0xA0)
+    r.bold = True
+    r = p.add_run("podemos ayudarle a incrementar su pensión por medio de nuestro ")
+    r = p.add_run("Servicio de Financiamiento")
+    r.font.color.rgb = RGBColor(0x70, 0x30, 0xA0)
+    r.bold = True
+    r = p.add_run(", usted puede obtener una pensión superior a los:\n")
+
+    table = document.add_table(rows=1, cols=2, style='Table Grid')
+    table.cell(0, 1).width = Inches(2.0)
+    table.cell(0, 0).width = Inches(2.0)
+    table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    color = parse_xml(r'<w:shd {} w:fill="B760E6"/>'.format(nsdecls('w')))
+    table.rows[0].cells[0]._tc.get_or_add_tcPr().append(color)
+    p = table.rows[0].cells[0].add_paragraph()
+    r = p.add_run("Su pensión con Humana:\n")
+    r.font.color.rgb = RGBColor(0x00, 0x00, 0x00)
+    r.bold = True
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+    p = table.rows[0].cells[1].add_paragraph()
+    r = p.add_run("$0,000.00")
+    r.font.color.rgb = RGBColor(0x00, 0x00, 0x00)
+    r.bold = True
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+
+    p= document.add_paragraph("\n")
+    r = p.add_run("Podemos agendarle una cita ")
+    r.bold = True
+    r = p.add_run("GRATUITA ")
+    r.font.color.rgb = RGBColor(0x70, 0x30, 0xA0)
+    r.bold = True
+    r = p.add_run("en cualquiera de nuestras sucursales para proporcionarle una asesoría completa sobre nuestros servicios para llegar a su ")
+    r.bold = True
+    r = p.add_run("Pensión Ideal\n\n\n\n")
+    r.font.color.rgb = RGBColor(0x70, 0x30, 0xA0)
+    r.bold = True
+    
     # SEMANAS COTIZADAS
     # SALARIO PROMEDIO
     # ASIGNACIONES FAMILIARES
@@ -712,7 +779,7 @@ def diagnostico(path="PDF/test0.pdf"):
     # TOTAL ASIGNACIONES
     # INCREMENTO PRESIDENCIAL
 
-
+    """
     tabla_word = document.add_table(1,cols=4)
     tabla_word.rows[0].cells[0].text = "SEMANAS COTIZADAS"
     tabla_word.rows[0].cells[1].text = ""
@@ -815,6 +882,7 @@ def diagnostico(path="PDF/test0.pdf"):
     filas.append("")
     filas.append(str(EDAD) + " AÑOS.")
     
+
     # Llenando contenido
     for i, fila in enumerate(filas):
         tabla_word.rows[i].cells[0].text = fila                             #Escribir el elemento de filas en el renglon
@@ -835,7 +903,6 @@ def diagnostico(path="PDF/test0.pdf"):
                     font.size= Pt(9)
                     font.color.rgb = RGBColor(0, 0, 0)
 
-
                     
                     
     #Color a la ultima fila
@@ -851,6 +918,7 @@ def diagnostico(path="PDF/test0.pdf"):
         for idx, width in enumerate(widths):
             row.cells[idx].width = width
 
+    """
 
     
 
@@ -861,8 +929,12 @@ def diagnostico(path="PDF/test0.pdf"):
     font.color.rgb = RGBColor(0x4F, 0x81, 0xBD)
 
 
-    p = document.add_paragraph('En la consulta se consideraron las semanas al día ' +date.today().strftime('%d/%m/%Y') + " y el salario promedio de la misma constancia. ")
+
+    p = document.add_paragraph('*Puede tener semanas NO reconocidas de los años 1984-1991, estas semanas pueden ayudarle a mejorar su pensión.')
+    if vigente:
+        p = document.add_paragraph(f'*El monto de su pensión puede llegar a variar dependiendo de su baja co el patrón (Baja esperada el día {ultimo_dia_mes}).')
     
+    """
     r = p.add_run("Representa la pensión que la persona recibiría hoy ")
     r.bold = True
     r.underline = True
@@ -899,7 +971,7 @@ def diagnostico(path="PDF/test0.pdf"):
     p = document.add_paragraph("\n*El monto de su pensión puede llegar a variar dependiendo de su baja con el patrón. ")
     if vigente:
         p.add_run("Baja esperada al día "+ultimo_dia_mes+" ")
-
+    """
     
     palabras =text[6].split(' ')
     #Para cambiar orden del nombre, y nombrar así el documento
@@ -917,8 +989,9 @@ def diagnostico(path="PDF/test0.pdf"):
     document_name = r"DIAGNOSTICOS/DIAGNOSTICO_" +document_name[:-1].replace(" ","_") +".docx"
     document.save(document_name)
     #endregion
-
-    os.system("start " + document_name)
+    if open_document:
+        os.system("start " + document_name)
+    return document_name
 
 
 

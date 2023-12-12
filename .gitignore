@@ -9,3 +9,4 @@ token.json
 venv/
 dist/
 build/
+app.spec
