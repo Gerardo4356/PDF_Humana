@@ -56,11 +56,7 @@ def copiar(array):
     x = x.replace(", ","\n")
     pc.copy(x)
     
-<<<<<<< HEAD
 def diagnostico(path="PDF/test0.pdf", open_document=False):
-=======
-def diagnostico(path="PDF/test0.pdf", open_document=True):
->>>>>>> 65bca425cad00183da5b904e702cc78b850571e7
     from datetime import date
     text = extract_text(path).split("\n")
 
@@ -698,7 +694,6 @@ def diagnostico(path="PDF/test0.pdf", open_document=True):
         p = document.add_paragraph('ESTATUS: '+text[60])
         
     p = document.add_paragraph('\n')
-<<<<<<< HEAD
 
     p = document.add_paragraph("Con base en la consulta de su Constancia de Semanas Cotizadas, se consideraron las semanas al día "+ date.today().strftime('%d/%m/%Y') +". El IMSS le reconoce "+str(semanas_reconocidas)+" semanas. "+str(semanas_desconocidas+" semanas no descontadas. " +str(semanas_reintegradas)+" semanas reintegradas."))
                                
@@ -723,15 +718,7 @@ def diagnostico(path="PDF/test0.pdf", open_document=True):
     r.font.color.rgb = RGBColor(0x00, 0x00, 0x00)
     r.bold = True
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-=======
->>>>>>> 65bca425cad00183da5b904e702cc78b850571e7
 
-    p = document.add_paragraph("Con base en la consulta de su Constancia de Semanas Cotizadas, se consideraron las semanas al día "+ date.today().strftime('%d/%m/%Y') +". El IMSS le reconoce "+str(semanas_reconocidas)+" semanas. "+str(semanas_desconocidas+" semanas no descontadas. " +str(semanas_reintegradas)+" semanas reintegradas."))
-                               
-    p= document.add_paragraph("")
-    r = p.add_run("Su pensión actual al cumplir 60 años sería de:")
-    r.bold = True
-    r.underline = True
 
     p= document.add_paragraph("\n")
     r = p.add_run("En ")
