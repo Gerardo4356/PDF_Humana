@@ -138,7 +138,7 @@ def Index():
 @app.route('/manual', methods=['GET', 'POST'])
 def manual():
     global verificaciones
-    global datos
+    global datos    
     global verificaciones_descarga
     if request.method == "POST":
         datos = []
@@ -147,7 +147,8 @@ def manual():
             uploaded_file = request.files['ruta_pdf']
             if uploaded_file.filename != '':
                 uploaded_file.save(r"PDF/test0.pdf")
-                diagnostico.diagnostico()
+                document_name = diagnostico.diagnostico(open_document=False)
+                return send_file(document_name, as_attachment=True)
 
     return render_template('manual.html', verificaciones=verificaciones, datos=datos, verificaciones_descarga=verificaciones_descarga, check = 'checked="false"')
 
@@ -155,6 +156,7 @@ def manual():
 if __name__ == "__main__":     # debug sirve en fase de pruebas para no tener que reiniciar a cada rato
 
     # Verifica si la aplicación ya está en ejecución y cierra la instancia anterior si es así
+    """
     for proc in psutil.process_iter():
         try:
             if proc.name() == "app.exe" and proc.pid != os.getpid():
@@ -169,4 +171,5 @@ if __name__ == "__main__":     # debug sirve en fase de pruebas para no tener qu
     if not os.path.isdir("PDF"):
         os.makedirs("PDF")
         print("Creando carpeta PDF")
-    app.run(port=5000, debug=True)
+    """
+    app.run(port=5000, debug=False)
