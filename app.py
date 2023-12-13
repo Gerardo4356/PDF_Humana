@@ -1,7 +1,7 @@
 #Para py installer: pyinstaller -w -F --add-data "templates;templates" app.py
 from filecmp import DEFAULT_IGNORES
 from re import I
-from flask import Flask, render_template, request, redirect, url_for, flash, send_file
+from flask import Flask, render_template, request, send_file
 # import scraping
 # import gmail
 import diagnostico
@@ -148,6 +148,11 @@ def manual():
             if uploaded_file.filename != '':
                 uploaded_file.save(r"PDF/test0.pdf")
                 document_name = diagnostico.diagnostico(open_document=False)
+                
+                # Ahora se requiere la ruta absoluta del archivo para poder descargarlo
+                # en send_file
+                document_name = os.path.abspath(document_name)
+                
                 return send_file(document_name, as_attachment=True)
 
     return render_template('manual.html', verificaciones=verificaciones, datos=datos, verificaciones_descarga=verificaciones_descarga, check = 'checked="false"')
