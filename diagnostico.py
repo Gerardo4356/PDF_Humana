@@ -695,7 +695,7 @@ def diagnostico(path="PDF/test0.pdf", open_document=False):
         
     p = document.add_paragraph('\n')
 
-    p = document.add_paragraph("Con base en la consulta de su Constancia de Semanas Cotizadas, se consideraron las semanas al día "+ date.today().strftime('%d/%m/%Y') +". El IMSS le reconoce "+str(semanas_reconocidas)+" semanas. "+str(semanas_desconocidas+" semanas no descontadas. " +str(semanas_reintegradas)+" semanas reintegradas."))
+    p = document.add_paragraph("Con base en la consulta de su Constancia de Semanas Cotizadas, se consideraron las semanas al día "+ date.today().strftime('%d/%m/%Y') +". El IMSS le reconoce "+str(semanas_reconocidas)+" semanas. "+str(semanas_desconocidas+" semanas descontadas. " +str(semanas_reintegradas)+" semanas reintegradas."))
                                
     p= document.add_paragraph("")
     r = p.add_run("Su pensión actual al cumplir 60 años sería de:\n")
@@ -932,7 +932,7 @@ def diagnostico(path="PDF/test0.pdf", open_document=False):
 
     p = document.add_paragraph('*Puede tener semanas NO reconocidas de los años 1984-1991, estas semanas pueden ayudarle a mejorar su pensión.')
     if vigente:
-        p = document.add_paragraph(f'*El monto de su pensión puede llegar a variar dependiendo de su baja co el patrón (Baja esperada el día {ultimo_dia_mes}).')
+        p = document.add_paragraph(f'*El monto de su pensión puede llegar a variar dependiendo de su baja con el patrón (Baja esperada el día {ultimo_dia_mes}).')
     
     """
     r = p.add_run("Representa la pensión que la persona recibiría hoy ")
