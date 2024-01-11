@@ -709,7 +709,7 @@ def diagnostico(path="PDF/test0.pdf", open_document=False):
     color = parse_xml(r'<w:shd {} w:fill="B760E6"/>'.format(nsdecls('w')))
     table.rows[0].cells[0]._tc.get_or_add_tcPr().append(color)
     p = table.rows[0].cells[0].add_paragraph()
-    r = p.add_run("Su pensión será\n")
+    r = p.add_run("Su pensión será: \n")
     r.font.color.rgb = RGBColor(0x00, 0x00, 0x00)
     r.bold = True
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -725,7 +725,7 @@ def diagnostico(path="PDF/test0.pdf", open_document=False):
     r = p.add_run("Humana Pensiones ")
     r.font.color.rgb = RGBColor(0x70, 0x30, 0xA0)
     r.bold = True
-    r = p.add_run("podemos ayudarle a incrementar su pensión por medio de nuestro ")
+    r = p.add_run("podemos ayudarle a incrementar su pensión por medio de la modalidad 40 a través de nuestro ")
     r = p.add_run("Servicio de Financiamiento")
     r.font.color.rgb = RGBColor(0x70, 0x30, 0xA0)
     r.bold = True
@@ -758,7 +758,7 @@ def diagnostico(path="PDF/test0.pdf", open_document=False):
     r.bold = True
     r = p.add_run("en cualquiera de nuestras sucursales para proporcionarle una asesoría completa sobre nuestros servicios para llegar a su ")
     r.bold = True
-    r = p.add_run("Pensión Ideal\n\n\n\n")
+    r = p.add_run("Pensión Ideal.\n\n\n\n")
     r.font.color.rgb = RGBColor(0x70, 0x30, 0xA0)
     r.bold = True
     
@@ -928,9 +928,14 @@ def diagnostico(path="PDF/test0.pdf", open_document=False):
     font = p.font
     font.color.rgb = RGBColor(0x4F, 0x81, 0xBD)
 
+    p = document.add_paragraph('*Fechas de pago de MOD. 40 a')
+    r = p.add_run(" __/__/__.")
+    r.bold = True
 
+    p = document.add_paragraph('Recibirá pensión mínima garantizada que en 2024 es de $0,000')
 
-    p = document.add_paragraph('*Puede tener semanas NO reconocidas de los años 1984-1991, estas semanas pueden ayudarle a mejorar su pensión.')
+    p = document.add_paragraph('*Puede tener semanas NO reconocidas de los años 19__-19__, estas semanas pueden ayudarle a mejorar su pensión.') # 1984-1991
+
     if vigente:
         p = document.add_paragraph(f'*El monto de su pensión puede llegar a variar dependiendo de su baja con el patrón (Baja esperada el día {ultimo_dia_mes}).')
     
