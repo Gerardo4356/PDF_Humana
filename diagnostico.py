@@ -709,7 +709,7 @@ def diagnostico(path="PDF/test0.pdf", open_document=False):
     color = parse_xml(r'<w:shd {} w:fill="B760E6"/>'.format(nsdecls('w')))
     table.rows[0].cells[0]._tc.get_or_add_tcPr().append(color)
     p = table.rows[0].cells[0].add_paragraph()
-    r = p.add_run("Su pensión será: \n")
+    r = p.add_run("Su cálculo actual es: \n")
     r.font.color.rgb = RGBColor(0x00, 0x00, 0x00)
     r.bold = True
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -756,7 +756,7 @@ def diagnostico(path="PDF/test0.pdf", open_document=False):
     r = p.add_run("GRATUITA ")
     r.font.color.rgb = RGBColor(0x70, 0x30, 0xA0)
     r.bold = True
-    r = p.add_run("en cualquiera de nuestras sucursales para proporcionarle una asesoría integral en pensiones para lograr su")
+    r = p.add_run("en cualquiera de nuestras sucursales para proporcionarle una asesoría integral en pensiones para lograr su ")
     r.bold = True
     r = p.add_run("PENSIÓN IDEAL.\n\n\n\n")
     r.font.color.rgb = RGBColor(0x70, 0x30, 0xA0)
